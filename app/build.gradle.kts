@@ -40,4 +40,6 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-analytics")
+
+    implementation("com.google.android.material:material:1.5.0-beta01")
 }
