@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UploadRecipeActivity">
@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Title Input"
         android:hint="Title"
         app:layout_constraintTop_toBottomOf="@id/uploadRecipeButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Description Input"
         android:hint="Description"
         app:layout_constraintTop_toBottomOf="@id/recipeTitleText"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +47,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="Cooking Time"
         android:hint="Cooking Time"
         app:layout_constraintTop_toBottomOf="@id/recipeDescriptionText"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +57,6 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_margin="10dp"
-        android:text="Ingredients"
         android:hint="Ingredients"
         app:layout_constraintTop_toBottomOf="@id/cookingTimeText"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,11 +67,11 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_margin="10dp"
-        android:text="Directions"
         android:hint="Directions"
-        app:layout_constraintTop_toBottomOf="@id/ingredientsText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ingredientsText" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroupTags"
