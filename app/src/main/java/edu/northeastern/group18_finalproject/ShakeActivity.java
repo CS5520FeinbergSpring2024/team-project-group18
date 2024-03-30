@@ -38,7 +38,8 @@ public class ShakeActivity extends AppCompatActivity {
             public void onShake() {
                 // Perform action when shake is detected
                 Log.d("Detected!", "detected!!!!!!");
-                Toast.makeText(ShakeActivity.this, "Shake detected!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ShakeActivity.this, DisplayRecipe.class);
+                startActivity(intent);
             }
         });
 
