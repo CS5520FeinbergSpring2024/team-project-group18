@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#FFF2F5">
+    android:background="@color/backgroundPink">
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
@@ -137,14 +137,16 @@
 
     <ImageButton
         android:id="@+id/addTagButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
+        android:layout_width="43dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="25dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="add tag"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_addbutton"
         app:layout_constraintBottom_toBottomOf="@id/chipGroupTags"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/chipGroupTags"
-        android:contentDescription="add tag"/>
+        app:layout_constraintTop_toTopOf="@id/chipGroupTags" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

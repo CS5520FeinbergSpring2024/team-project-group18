@@ -5,44 +5,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="#FFF2F5">
+    android:background="@color/backgroundPink">
 
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="25dp"
         android:text="Welcome to ALL SHAKE!"
         android:textColor="#FF8700"
         android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@id/loginButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/loginButton"
-        app:layout_constraintTop_toBottomOf="@id/shakeImg"/>
+        app:layout_constraintTop_toBottomOf="@id/shakeImg" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
+        style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/circle_background"
-        android:text="Log In to Shake"
-        android:textSize="24sp"
-        android:textColor="#FFFFFF"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
         android:padding="16dp"
+        android:text="Log In to Shake"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        app:iconTint="@color/iconBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView" />
 
     <ImageView
+        android:id="@+id/appIcon"
+        android:layout_width="73dp"
+        android:layout_height="61dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toTopOf="@id/shakeImg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/g18_ic" />
+
+    <ImageView
         android:id="@+id/shakeImg"
         android:layout_width="188dp"
         android:layout_height="208dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toTopOf="@id/textView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appIcon"
         app:srcCompat="@mipmap/shake" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

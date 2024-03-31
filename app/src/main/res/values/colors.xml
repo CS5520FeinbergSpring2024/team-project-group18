@@ -3,4 +3,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="purple">#85673AB7</color>
+    <color name="iconBlue">#A4C5CA</color>
+    <color name="backgroundPink">#FFD9E0</color>
 </resources>
