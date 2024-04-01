@@ -44,7 +44,8 @@ public class UploadRecipeActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 2;
     static final int REQUEST_IMAGE_PICK = 100;
-    private Uri photoURI;
+    private Uri takePhotoURI;
+    private Uri selectedPhotoURI;
 
 
     @Override
@@ -102,9 +103,32 @@ public class UploadRecipeActivity extends AppCompatActivity {
     }
 
     public void openCamera(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager())!= null){
 
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Log.e("CameraError", "Error occurred:", ex);
+
+            }
+            if (photoFile != null){
+                takePhotoURI = FileProvider.getUriForFile(this, "com.example.android.fileprovider", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takePhotoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+
+        }
     }
 
+    private File createImageFile() throws IOException{
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "IMAGE_"+timeStamp;
+        File storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile( imageFileName, ".jpg",  storageDirectory);
+        return image;
+    }
 
 
     public void openGallery(){
@@ -116,13 +140,19 @@ public class UploadRecipeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode,data);
 
-        if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE_PICK){
-            if ( data != null && data.getData() != null){
-                photoURI = data.getData();
-
-                Log.d("PHOTO URI", "onActivityResult: photo uri: " + photoURI.toString());
-                photoImageView.setImageURI(photoURI);
+        if (resultCode == RESULT_OK ){
+            if(requestCode == REQUEST_IMAGE_CAPTURE){
+                Log.d("PHOTO URI" , "onActivityResult: TAKE photo uri: " + takePhotoURI.toString());
+                photoImageView.setImageURI(takePhotoURI);
                 addPhotoButton.setEnabled(false);
+            }
+
+            else if(requestCode == REQUEST_IMAGE_PICK){
+                if ( data != null && data.getData() != null){
+                    selectedPhotoURI = data.getData();
+                    photoImageView.setImageURI(selectedPhotoURI);
+                    addPhotoButton.setEnabled(false);
+                }
             }
         }
     }
