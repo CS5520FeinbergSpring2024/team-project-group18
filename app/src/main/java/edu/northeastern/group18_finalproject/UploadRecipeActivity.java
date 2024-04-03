@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -28,13 +29,15 @@ import com.google.android.material.chip.ChipGroup;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class UploadRecipeActivity extends AppCompatActivity {
 
     private ChipGroup chipGroupTags;
-    private ImageButton addTagButton;
+    private ImageButton addTagButton, deletePhotoButton;
 
     private Button addPhotoButton, postRecipeButton;
 
@@ -46,6 +49,7 @@ public class UploadRecipeActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_PICK = 100;
     private Uri takePhotoURI;
     private Uri selectedPhotoURI;
+    private List<Uri> imageUris;
 
 
     @Override
@@ -57,14 +61,33 @@ public class UploadRecipeActivity extends AppCompatActivity {
         addTagButton = findViewById(R.id.addTagButton);
 
         addPhotoButton = findViewById(R.id.addPhotoButton);
+        deletePhotoButton = findViewById(R.id.deletePhotoButton);
         postRecipeButton = findViewById(R.id.postRecipeButton);
-
         photoImageView = findViewById(R.id.photoImageView);
 
+        imageUris = new ArrayList<>();
+
+        photoImageView.setImageURI(null);
+        deletePhotoButton.setVisibility(View.GONE);
+        addPhotoButton.setEnabled(true);
+
+        deletePhoto();
         addPhotoOptions();
         presetTags();
         setAddTagButton();
         }
+
+
+    private void deletePhoto(){
+        deletePhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                photoImageView.setImageURI(null);
+                deletePhotoButton.setVisibility(View.GONE);
+                addPhotoButton.setEnabled(true);
+            }
+        });
+    }
 
 
     private void addPhotoOptions(){
@@ -118,7 +141,6 @@ public class UploadRecipeActivity extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takePhotoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
-
         }
     }
 
@@ -142,8 +164,8 @@ public class UploadRecipeActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK ){
             if(requestCode == REQUEST_IMAGE_CAPTURE){
-                Log.d("PHOTO URI" , "onActivityResult: TAKE photo uri: " + takePhotoURI.toString());
                 photoImageView.setImageURI(takePhotoURI);
+                deletePhotoButton.setVisibility(View.VISIBLE);
                 addPhotoButton.setEnabled(false);
             }
 
@@ -151,6 +173,7 @@ public class UploadRecipeActivity extends AppCompatActivity {
                 if ( data != null && data.getData() != null){
                     selectedPhotoURI = data.getData();
                     photoImageView.setImageURI(selectedPhotoURI);
+                    deletePhotoButton.setVisibility(View.VISIBLE);
                     addPhotoButton.setEnabled(false);
                 }
             }
