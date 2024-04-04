@@ -21,6 +21,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/shakeImg" />
 
+    <EditText
+        android:id="@+id/usernameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Username"
+        android:inputType="text"
+        android:singleLine="true"
+        app:layout_constraintBottom_toTopOf="@id/loginButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView"/>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
         style="@style/Widget.Material3.Button.TonalButton"
@@ -37,6 +50,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/signupButton"
+        style="@style/Widget.Material3.Button.TonalButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="Sign Up to Shake"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        app:iconTint="@color/iconBlue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginButton" />
 
     <ImageView
         android:id="@+id/appIcon"
