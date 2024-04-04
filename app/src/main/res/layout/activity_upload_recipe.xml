@@ -13,7 +13,6 @@
     android:layout_height="match_parent"
     tools:context=".UploadRecipeActivity">
 
-
     <Button
         android:id="@+id/postRecipeButton"
         android:layout_width="wrap_content"
@@ -23,8 +22,22 @@
         android:layout_marginRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/ImageLayout"
+        app:layout_constraintBottom_toTopOf="@id/photoGridLayout"
         />
+
+    <GridLayout
+        android:id="@+id/photoGridLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:columnCount="3"
+        app:layout_constraintTop_toBottomOf="@id/postRecipeButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:rowCount="3"
+        android:alignmentMode="alignMargins"
+        android:padding="4dp">
+    </GridLayout>
 
     <Button
         android:id="@+id/addPhotoButton"
@@ -34,42 +47,41 @@
         android:layout_margin="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ImageLayout"
-        app:layout_constraintBottom_toBottomOf="@id/ImageLayout"
+        app:layout_constraintTop_toBottomOf="@id/photoGridLayout"
         />
 
-    <FrameLayout
-        android:id="@+id/ImageLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/recipeTitleTextLayout">
+<!--    <FrameLayout-->
+<!--        android:id="@+id/ImageLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="10dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/recipeTitleTextLayout">-->
 
-        <ImageView
-            android:id="@+id/photoImageView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop" />
+<!--        <ImageView-->
+<!--            android:id="@+id/photoImageView"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="200dp"-->
+<!--            android:scaleType="centerCrop" />-->
 
-        <ImageButton
-            android:id="@+id/deletePhotoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|top"
-            android:layout_margin="5dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_deletebutton"
-            android:visibility="gone"/>
-    </FrameLayout>
+<!--        <ImageButton-->
+<!--            android:id="@+id/deletePhotoButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="end|top"-->
+<!--            android:layout_margin="5dp"-->
+<!--            android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--            android:src="@drawable/ic_deletebutton"-->
+<!--            android:visibility="gone"/>-->
+<!--    </FrameLayout>-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/recipeTitleTextLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        app:layout_constraintTop_toBottomOf="@id/ImageLayout"
+        app:layout_constraintTop_toBottomOf="@id/addPhotoButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 

@@ -16,9 +16,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.Manifest;
 import android.widget.ImageView;
@@ -46,10 +49,15 @@ public class UploadRecipeActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 1;
 
     static final int REQUEST_IMAGE_CAPTURE = 2;
+
     static final int REQUEST_IMAGE_PICK = 100;
     private Uri takePhotoURI;
     private Uri selectedPhotoURI;
-    private List<Uri> imageUris;
+    static final int REQUEST_MULTI_PHOTO_PICK = 6;
+
+    private static final int MAX_PHOTOS = 6;
+    private ArrayList<Uri> photoUris = new ArrayList<>();
+    private GridLayout photoGridLayout;
 
 
     @Override
@@ -57,21 +65,14 @@ public class UploadRecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_recipe);
 
+        photoGridLayout = findViewById(R.id.photoGridLayout);
+
         chipGroupTags = findViewById(R.id.chipGroupTags);
         addTagButton = findViewById(R.id.addTagButton);
 
         addPhotoButton = findViewById(R.id.addPhotoButton);
-        deletePhotoButton = findViewById(R.id.deletePhotoButton);
         postRecipeButton = findViewById(R.id.postRecipeButton);
-        photoImageView = findViewById(R.id.photoImageView);
 
-        imageUris = new ArrayList<>();
-
-        photoImageView.setImageURI(null);
-        deletePhotoButton.setVisibility(View.GONE);
-        addPhotoButton.setEnabled(true);
-
-        deletePhoto();
         addPhotoOptions();
         presetTags();
         setAddTagButton();
@@ -88,7 +89,6 @@ public class UploadRecipeActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void addPhotoOptions(){
         addPhotoButton.setOnClickListener(new View.OnClickListener() {
@@ -152,34 +152,74 @@ public class UploadRecipeActivity extends AppCompatActivity {
         return image;
     }
 
-
-    public void openGallery(){
-        Intent pickPhotoIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(pickPhotoIntent, REQUEST_IMAGE_PICK);
+    public void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Pictures"), REQUEST_IMAGE_PICK);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode, resultCode,data);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK ){
-            if(requestCode == REQUEST_IMAGE_CAPTURE){
-                photoImageView.setImageURI(takePhotoURI);
-                deletePhotoButton.setVisibility(View.VISIBLE);
-                addPhotoButton.setEnabled(false);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                photoUris.add(takePhotoURI);
+                addPhotoToGridLayout(takePhotoURI);
             }
-
-            else if(requestCode == REQUEST_IMAGE_PICK){
-                if ( data != null && data.getData() != null){
-                    selectedPhotoURI = data.getData();
-                    photoImageView.setImageURI(selectedPhotoURI);
-                    deletePhotoButton.setVisibility(View.VISIBLE);
-                    addPhotoButton.setEnabled(false);
+            else if (requestCode == REQUEST_IMAGE_PICK) {
+                if (data != null) {
+                    if (data.getClipData() != null) {
+                        int count = data.getClipData().getItemCount();
+                        int numToAdd = Math.min(count, MAX_PHOTOS - photoUris.size());
+                        for (int i = 0; i < numToAdd; i++) {
+                            selectedPhotoURI = data.getClipData().getItemAt(i).getUri();
+                            photoUris.add(selectedPhotoURI);
+                            addPhotoToGridLayout(selectedPhotoURI);
+                        }
+                    }
+                    else if (data.getData() != null) {
+                        selectedPhotoURI = data.getData();
+                        photoUris.add(selectedPhotoURI);
+                        addPhotoToGridLayout(selectedPhotoURI);
+                    }
                 }
             }
         }
+        if (photoUris.size() == MAX_PHOTOS) {
+            addPhotoButton.setVisibility(View.GONE);
+        }
     }
 
+    private void addPhotoToGridLayout(Uri photoUri) {
+
+        final View photoItemLayout = LayoutInflater.from(this).inflate(R.layout.item_photo, photoGridLayout, false);
+        photoImageView = photoItemLayout.findViewById(R.id.photoImageView);
+        deletePhotoButton = photoItemLayout.findViewById(R.id.deletePhotoButton);
+        photoImageView.setImageURI(photoUri);
+
+        deletePhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                photoGridLayout.removeView(photoItemLayout);
+                photoUris.remove(photoUri);
+
+                if(photoUris.size()< MAX_PHOTOS && addPhotoButton.getVisibility() == View.GONE){
+                    addPhotoButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+        params.width = 200;
+        params.height = 200;
+        params.rightMargin = 20;
+        params.topMargin = 20;
+        photoItemLayout.setLayoutParams(params);
+        photoGridLayout.addView(photoItemLayout);
+    }
 
     private void presetTags(){
 
@@ -223,6 +263,14 @@ public class UploadRecipeActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void logPhotoUris(List<Uri> uris){
+        StringBuilder sb = new StringBuilder("Photo URIs: ");
+        for (Uri uri : photoUris) {
+            sb.append(uri.toString()).append("; ");
+        }
+        Log.d("PHOTOURI", sb.toString());
     }
 
 }
