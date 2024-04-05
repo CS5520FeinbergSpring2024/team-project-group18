@@ -60,13 +60,18 @@ public class DisplayRecipe extends AppCompatActivity {
                     // Fetch tags
                     List<String> tags = new ArrayList<>();
                     for (DataSnapshot tagSnapshot : firstRecipeSnapshot.child("tags").getChildren()) {
-                        tags.add(tagSnapshot.getKey());
+                       tags.add(tagSnapshot.getValue().toString());
+//                        String tag = tagSnapshot.getValue(String.class);
+//                        tags.add(tag);
                     }
 
                     // Fetch images
                     List<String> imageUrls = new ArrayList<>();
-                    for (DataSnapshot imageSnapshot : firstRecipeSnapshot.child("images").getChildren()) {
-                        imageUrls.add(imageSnapshot.getKey());
+                    for (DataSnapshot imageSnapshot : firstRecipeSnapshot.child("imageUrl").getChildren()) {
+                        imageUrls.add(imageSnapshot.getValue().toString());
+//                        String imageUrl = imageSnapshot.getValue(String.class);
+//                        imageUrls.add(imageUrl);
+
                     }
 
                     // Create Recipe object for the first recipe
