@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this, ShakeActivity.class);
+                    Intent intent = new Intent(MainActivity.this, DisplayRecipe.class); /*DisplayRecipe ShakeActivity*/
                     startActivity(intent);
                     finish();
                 } else {
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                     usersRef.child(username).child("username").setValue(username);
                     Toast.makeText(MainActivity.this, "Account created. You are now logged in", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(MainActivity.this, ShakeActivity.class);
+                    Intent intent = new Intent(MainActivity.this, DisplayRecipe.class); /*DisplayRecipe ShakeActivity*/
                     startActivity(intent);
                     finish();
                 }
