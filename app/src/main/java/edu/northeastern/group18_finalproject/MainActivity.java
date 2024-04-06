@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
+                    UserSession.setUsername(username);
                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, DisplayRecipe.class); /*DisplayRecipe ShakeActivity*/
                     startActivity(intent);
@@ -97,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     // Username does not exist, create new
                     // might need more field in the future
                     usersRef.child(username).child("username").setValue(username);
+                    UserSession.setUsername(username);
                     Toast.makeText(MainActivity.this, "Account created. You are now logged in", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(MainActivity.this, DisplayRecipe.class); /*DisplayRecipe ShakeActivity*/
