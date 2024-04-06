@@ -17,6 +17,7 @@ import java.util.List;
 
 public class ShakeActivity extends AppCompatActivity {
     private ShakeDetector shakeDetector;
+    private Button friendListButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,22 @@ public class ShakeActivity extends AppCompatActivity {
             public void onClick(View view){
                 Intent intent = new Intent(ShakeActivity.this, UploadRecipeActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        friendListButton = findViewById(R.id.friendListButton);
+        friendListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start the FriendListActivity
+//                startActivity(new Intent(ShakeActivity.this, FriendListActivity.class));
+                try {
+                    // Start the FriendListActivity
+                    startActivity(new Intent(ShakeActivity.this, FriendListActivity.class));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("MainActivity", "Error starting FriendListActivity: " + e.getMessage());
+                }
             }
         });
     }
