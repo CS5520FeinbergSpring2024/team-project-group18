@@ -14,9 +14,11 @@ public class Recipe {
         // Default constructor required for Firebase
     }
 
-    public Recipe(String recipeId, String name, String creator, String description, List<String> tags, List<String> imageUrl) {
+
+    public Recipe(String recipeId, String title, String creator, String description,
+                  List<String> tags, List<String> imageUrl) {
         this.recipeId = recipeId;
-        this.name = name;
+        this.name = title;
         this.creator = creator;
         this.description = description;
         this.tags = tags;

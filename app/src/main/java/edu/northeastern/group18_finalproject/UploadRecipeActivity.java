@@ -25,14 +25,21 @@ import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.Manifest;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -46,6 +53,8 @@ public class UploadRecipeActivity extends AppCompatActivity {
 
     private ImageView photoImageView;
 
+    private TextInputEditText recipeTitle, recipeDescription, cookingTime, ingredients, directions;
+
     private static final int REQUEST_CAMERA_PERMISSION = 1;
 
     static final int REQUEST_IMAGE_CAPTURE = 2;
@@ -58,12 +67,22 @@ public class UploadRecipeActivity extends AppCompatActivity {
     private static final int MAX_PHOTOS = 6;
     private ArrayList<Uri> photoUris = new ArrayList<>();
     private GridLayout photoGridLayout;
+    private DatabaseReference recipesRef;
+
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_recipe);
+
+        recipeTitle = findViewById(R.id.recipeTitleText);
+        recipeDescription = findViewById(R.id.recipeDescriptionText);
+        cookingTime = findViewById(R.id.cookingTimeText);
+        ingredients = findViewById(R.id.ingredientsText);
+        directions = findViewById(R.id.directionsText);
 
         photoGridLayout = findViewById(R.id.photoGridLayout);
 
@@ -76,19 +95,9 @@ public class UploadRecipeActivity extends AppCompatActivity {
         addPhotoOptions();
         presetTags();
         setAddTagButton();
+        postRecipe();
         }
 
-
-    private void deletePhoto(){
-        deletePhotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                photoImageView.setImageURI(null);
-                deletePhotoButton.setVisibility(View.GONE);
-                addPhotoButton.setEnabled(true);
-            }
-        });
-    }
 
     private void addPhotoOptions(){
         addPhotoButton.setOnClickListener(new View.OnClickListener() {
@@ -262,8 +271,89 @@ public class UploadRecipeActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-
     }
+
+    private void postRecipe(){
+        postRecipeButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+
+                boolean isValid = true;
+
+                String title = recipeTitle.getText().toString().trim();
+                String description = recipeDescription.getText().toString().trim();
+                String time = cookingTime.getText().toString().trim();
+                String ingredientList = ingredients.getText().toString().trim();
+                String directionList = directions.getText().toString().trim();
+
+                String creator = UserSession.getUsername();
+
+                List<String> photoUrisStrings = new ArrayList<>();
+                for (Uri uri : photoUris){
+                    photoUrisStrings.add(uri.toString());
+                }
+
+                List<String> tagStrings = new ArrayList<>();
+                for (int i = 0; i < chipGroupTags.getChildCount(); i++){
+                    Chip chip = (Chip) chipGroupTags.getChildAt(i);
+                    if (chip.isChecked()){
+                        tagStrings.add(chip.getText().toString());
+                    }
+                }
+
+                if (title.isEmpty()) {
+                    recipeTitle.setError("Title cannot be empty");
+                    isValid = false;
+                }
+                if (description.isEmpty()) {
+                    recipeDescription.setError("Description cannot be empty");
+                    isValid = false;
+                }
+                if (time.isEmpty()) {
+                    cookingTime.setError("Cooking time cannot be empty");
+                    isValid = false;
+                }
+                if (ingredientList.isEmpty()) {
+                    ingredients.setError("Ingredients cannot be empty");
+                    isValid = false;
+                }
+                if (directionList.isEmpty()) {
+                    directions.setError("Directions cannot be empty");
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    Toast.makeText(UploadRecipeActivity.this, "Please fill out all required fields.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                uploadRecipeToFirebase(creator, title, description, photoUrisStrings, tagStrings);
+            }
+        });
+    }
+
+    private void uploadRecipeToFirebase(String creator, String title, String description, List<String> photoUris, List<String> tags) {
+        recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
+
+        String recipeId = recipesRef.push().getKey();
+
+        if (recipeId != null) {
+
+            Recipe recipe = new Recipe(recipeId, title, creator, description, tags, photoUris);
+
+            recipesRef.child(recipeId).setValue(recipe)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(UploadRecipeActivity.this, "Recipe uploaded successfully", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(UploadRecipeActivity.this, DisplayRecipe.class);
+                        intent.putExtra("recipeId", recipeId);
+                        startActivity(intent);
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(UploadRecipeActivity.this, "Failed to upload recipe", Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
 
     public void logPhotoUris(List<Uri> uris){
         StringBuilder sb = new StringBuilder("Photo URIs: ");

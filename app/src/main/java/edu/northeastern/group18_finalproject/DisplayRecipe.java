@@ -50,13 +50,43 @@ public class DisplayRecipe extends AppCompatActivity {
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
         // Fetch and display the first recipe from the database
-        fetchFirstRecipe();
+
+        String recipeId = getIntent().getStringExtra("recipeId");
+        if (recipeId != null) {
+            fetchRecipeById(recipeId);
+
+        } else {
+            fetchFirstRecipe();
+        }
 
         Button addFriendButton = findViewById(R.id.addFriendButton);
         addFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addFriend(recipeCreatorTextView.getText().toString());
+            }
+        });
+    }
+
+    private void fetchRecipeById(String recipeId) {
+        recipesRef.child(recipeId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Recipe recipe = dataSnapshot.getValue(Recipe.class);
+
+                    if (recipe != null) {
+                        populateUIWithRecipe(recipe);
+                    } else {
+                        Toast.makeText(DisplayRecipe.this, "Failed to load recipe details.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(DisplayRecipe.this, "Recipe does not exist.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(DisplayRecipe.this, "Error fetching recipe: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -110,11 +140,18 @@ public class DisplayRecipe extends AppCompatActivity {
 
         recipeTagsTextView.setText(TextUtils.join(", ", recipe.getTags()));
 
+
         // Set up RecyclerView for recipe images
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recipeImagesRecyclerView.setLayoutManager(layoutManager);
-        RecipeImageAdapter adapter = new RecipeImageAdapter(recipe.getImageUrl());
-        recipeImagesRecyclerView.setAdapter(adapter);
+
+        if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+            recipeImagesRecyclerView.setLayoutManager(layoutManager);
+            RecipeImageAdapter adapter = new RecipeImageAdapter(recipe.getImageUrl());
+            recipeImagesRecyclerView.setAdapter(adapter);
+            recipeImagesRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            recipeImagesRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     private void addFriend(String creatorUsername) {
