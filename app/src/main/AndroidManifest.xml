@@ -58,6 +58,9 @@
             android:name=".FriendListActivity"
             android:exported="false"/>
         <activity
+            android:name=".MessageActivity"
+            android:exported="false"/>
+        <activity
             android:name=".ShakeActivity"
             android:exported="false" />
         <activity

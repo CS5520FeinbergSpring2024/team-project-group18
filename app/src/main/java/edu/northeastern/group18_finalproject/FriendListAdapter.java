@@ -1,6 +1,6 @@
 package edu.northeastern.group18_finalproject;
 
-import android.util.Log;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +12,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.FriendViewHolder> {
+    private Context context;
 
     private List<String> friendList;
+    private OnItemClickListener listener;
 
-    public FriendListAdapter(List<String> friendList) {
+    public FriendListAdapter(Context context, List<String> friendList) {
+        this.context = context;
         this.friendList = friendList;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public FriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(context)
                 .inflate(R.layout.item_friend, parent, false);
         return new FriendViewHolder(itemView);
     }
@@ -30,7 +41,16 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
     @Override
     public void onBindViewHolder(@NonNull FriendViewHolder holder, int position) {
         String friendUsername = friendList.get(position);
-        holder.friendNameTextView.setText(friendUsername);
+//        holder.friendNameTextView.setText(friendUsername);
+        holder.bind(friendUsername);
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (listener != null) {
+//                    listener.onItemClick(position);
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -38,12 +58,27 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
         return friendList != null ? friendList.size() : 0;
     }
 
-    static class FriendViewHolder extends RecyclerView.ViewHolder {
+    class FriendViewHolder extends RecyclerView.ViewHolder {
         TextView friendNameTextView;
 
         public FriendViewHolder(@NonNull View itemView) {
             super(itemView);
             friendNameTextView = itemView.findViewById(R.id.friendNameTextView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
+                        }
+                    }
+                }
+            });
+}
+
+        public void bind(String username) {
+            friendNameTextView.setText("Friend: " + username);
         }
     }
 }

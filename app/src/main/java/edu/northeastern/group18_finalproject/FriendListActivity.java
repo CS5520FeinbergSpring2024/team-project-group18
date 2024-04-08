@@ -1,5 +1,6 @@
 package edu.northeastern.group18_finalproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -30,6 +31,11 @@ public class FriendListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friend_list);
 
         friendListRecyclerView = findViewById(R.id.friendListRecyclerView);
+        friendListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        friendList = new ArrayList<>();
+        adapter = new FriendListAdapter(this, friendList);
+        friendListRecyclerView.setAdapter(adapter);
 
         // Initialize Firebase
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
@@ -37,8 +43,17 @@ public class FriendListActivity extends AppCompatActivity {
         // Fetch the list of friends for the current user
         fetchFriendList();
 
-        // Set up RecyclerView adapter
-        friendListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter.setOnItemClickListener(new FriendListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String friendUsername = friendList.get(position);
+                Intent intent = new Intent(FriendListActivity.this, MessageActivity.class);
+                intent.putExtra("friendUsername", friendUsername);
+                Log.d("friendUsername", friendUsername);
+                startActivity(intent);
+            }
+        });
+
 
     }
 
@@ -57,8 +72,14 @@ public class FriendListActivity extends AppCompatActivity {
                         Log.d("friend", friendList.toString());
                     }
                     // Update the RecyclerView adapter with the fetched friend list
-                    adapter = new FriendListAdapter(friendList);
-                    friendListRecyclerView.setAdapter(adapter);
+//                    adapter = new FriendListAdapter(friendList);
+                    adapter.notifyDataSetChanged();
+//                    Log.d("friend", adapter.toString());
+
+
+
+//                    friendListRecyclerView.setAdapter(adapter);
+
 
                 } else {
                     Log.d("Firebase", "No friends found for the user");

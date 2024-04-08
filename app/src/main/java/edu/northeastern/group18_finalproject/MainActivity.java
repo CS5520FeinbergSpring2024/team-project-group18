@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 if (dataSnapshot.exists()) {
                     UserSession.setUsername(username);
                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(MainActivity.this, DisplayRecipe.class); /*DisplayRecipe ShakeActivity*/
+                    Intent intent = new Intent(MainActivity.this, ShakeActivity.class); /*DisplayRecipe ShakeActivity*/
                     startActivity(intent);
                     finish();
                 } else {
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     UserSession.setUsername(username);
                     Toast.makeText(MainActivity.this, "Account created. You are now logged in", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(MainActivity.this, DisplayRecipe.class); /*DisplayRecipe ShakeActivity*/
+                    Intent intent = new Intent(MainActivity.this, ShakeActivity.class); /*DisplayRecipe ShakeActivity*/
                     startActivity(intent);
                     finish();
                 }
