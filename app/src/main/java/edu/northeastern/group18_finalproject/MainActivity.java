@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,7 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText usernameEditText;
+    private TextInputEditText usernameEditText;
     private DatabaseReference usersRef;
 
 
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         usersRef = FirebaseDatabase.getInstance().getReference("users");
 
-        usernameEditText = findViewById(R.id.usernameEditText);
+        usernameEditText = findViewById(R.id.usernameText);
         MaterialButton loginButton = findViewById(R.id.loginButton);
         MaterialButton signupButton = findViewById(R.id.signupButton);
         loginButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.iconBlue)));
