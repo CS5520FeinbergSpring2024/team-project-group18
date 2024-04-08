@@ -17,11 +17,6 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
     private List<String> friendList;
     private OnItemClickListener listener;
 
-    public FriendListAdapter(Context context, List<String> friendList) {
-        this.context = context;
-        this.friendList = friendList;
-    }
-
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
@@ -29,6 +24,12 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
+
+    public FriendListAdapter(Context context, List<String> friendList) {
+        this.context = context;
+        this.friendList = friendList;
+    }
+
 
     @NonNull
     @Override
@@ -46,7 +47,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 //        holder.itemView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                if (listener != null) {
+//                if (listener != null)
 //                    listener.onItemClick(position);
 //                }
 //            }

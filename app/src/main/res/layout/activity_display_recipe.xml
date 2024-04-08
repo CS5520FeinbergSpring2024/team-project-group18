@@ -4,6 +4,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/appIcon"
+        android:layout_width="119dp"
+        android:layout_height="111dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toTopOf="@id/recipeImagesRecyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/g18_ic" />
+
+    <TextView
+        android:id="@+id/recipeCreatorTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/addFriendButton"
+        app:layout_constraintTop_toBottomOf="@id/appIcon"/>
+
+    <Button
+        android:id="@+id/addFriendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Friend"
+        android:onClick="onAddFriendButtonClick"
+        app:layout_constraintStart_toEndOf="@id/recipeCreatorTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appIcon"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipeImagesRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appIcon"
+        app:layout_constraintBottom_toTopOf="@id/recipeNameTextView"/>
+
     <TextView
         android:id="@+id/recipeNameTextView"
         android:layout_width="0dp"
@@ -15,29 +62,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
-    <TextView
-        android:id="@+id/recipeCreatorTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipeNameTextView"/>
-
-    <Button
-        android:id="@+id/addFriendButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Friend"
-        android:onClick="onAddFriendButtonClick"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipeCreatorTextView"/>
+        app:layout_constraintTop_toBottomOf="@id/recipeImagesRecyclerView"/>
 
     <TextView
         android:id="@+id/recipeDescriptionTextView"
@@ -49,7 +74,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addFriendButton"/>
+        app:layout_constraintTop_toBottomOf="@id/recipeNameTextView"/>
 
     <TextView
         android:id="@+id/recipeTagsTextView"
@@ -63,16 +88,40 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipeDescriptionTextView"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recipeImagesRecyclerView"
+    <TextView
+        android:id="@+id/recipeCookingTimeTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textSize="16sp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipeTagsTextView"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/recipeTagsTextView"/>
+
+    <TextView
+        android:id="@+id/recipeIngredientseTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipeCookingTimeTextView"/>
+
+    <TextView
+        android:id="@+id/recipeDirectionsTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipeIngredientseTextView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

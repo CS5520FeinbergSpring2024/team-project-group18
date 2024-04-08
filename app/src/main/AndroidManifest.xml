@@ -34,9 +34,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Group18_FinalProject"
         tools:targetApi="31">
-        <activity
-            android:name=".PhotoSelectorActivity"
-            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

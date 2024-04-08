@@ -46,6 +46,7 @@ public class FriendListActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new FriendListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+                Log.d("aaaaaaname","click item");
                 String friendUsername = friendList.get(position);
                 Intent intent = new Intent(FriendListActivity.this, MessageActivity.class);
                 intent.putExtra("friendUsername", friendUsername);
@@ -64,7 +65,7 @@ public class FriendListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    friendList = new ArrayList<>();
+//                    friendList.clear();
                     for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
                         String friendUsername = friendSnapshot.getValue(String.class);
                         friendList.add(friendUsername);

@@ -4,6 +4,7 @@ package edu.northeastern.group18_finalproject;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,6 +41,8 @@ public class MessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
+
+
         // Initialize views
         messageTextview = findViewById(R.id.messageTextView);
         senderTextView = findViewById(R.id.senderTextView);
@@ -49,12 +52,12 @@ public class MessageActivity extends AppCompatActivity {
 
         // Get friend user ID from intent
         // Need to import from friendlist activity
-        friendUsername = getIntent().getStringExtra("friendUserId");
+        friendUsername = getIntent().getStringExtra("friendUsername");
 
         currentUsername = UserSession.getUsername();
 
         // Initialize Firebase Database reference
-        messagesRef = FirebaseDatabase.getInstance().getReference().child("user").child("message").child(friendUsername);
+        messagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("message").child(friendUsername);
 
         // Set up onClickListener for send message button
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
