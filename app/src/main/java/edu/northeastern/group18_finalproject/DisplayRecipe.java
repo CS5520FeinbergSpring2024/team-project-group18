@@ -157,6 +157,7 @@ public class DisplayRecipe extends AppCompatActivity {
     private void addFriend(String creatorUsername) {
         String currentUsername = UserSession.getUsername();
         DatabaseReference currentUserFriendsRef = usersRef.child(currentUsername).child("friends");
+        DatabaseReference creatorUserFriendsRef = usersRef.child(creatorUsername).child("friends");
         currentUserFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -164,12 +165,14 @@ public class DisplayRecipe extends AppCompatActivity {
                     if (!dataSnapshot.getChildren().iterator().hasNext() || !dataSnapshot.getChildren().iterator().next().getValue(String.class).equals(creatorUsername)) {
                         // If not already friends, add the creator as a friend
                         currentUserFriendsRef.push().setValue(creatorUsername);
+                        creatorUserFriendsRef.push().setValue(currentUsername);
                         updateFriendButtonUI();
                     } else {
                         Toast.makeText(DisplayRecipe.this, "You are already friends with the recipe creator", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     currentUserFriendsRef.push().setValue(creatorUsername);
+                    creatorUserFriendsRef.push().setValue(currentUsername);
                     updateFriendButtonUI();
                 }
             }
