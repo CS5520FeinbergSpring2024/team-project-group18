@@ -1,5 +1,6 @@
 package edu.northeastern.group18_finalproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -68,6 +69,15 @@ public class DisplayRecipe extends AppCompatActivity {
                 addFriend(recipeCreatorTextView.getText().toString());
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // Handle the back press event
+        super.onBackPressed();
+        Intent intent = new Intent(this, ShakeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void fetchRecipeById(String recipeId) {
