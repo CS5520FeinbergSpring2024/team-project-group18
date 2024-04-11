@@ -34,6 +34,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +43,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class UploadRecipeActivity extends AppCompatActivity {
 
@@ -68,10 +74,6 @@ public class UploadRecipeActivity extends AppCompatActivity {
     private ArrayList<Uri> photoUris = new ArrayList<>();
     private GridLayout photoGridLayout;
     private DatabaseReference recipesRef;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,11 +290,6 @@ public class UploadRecipeActivity extends AppCompatActivity {
 
                 String creator = UserSession.getUsername();
 
-                List<String> photoUrisStrings = new ArrayList<>();
-                for (Uri uri : photoUris){
-                    photoUrisStrings.add(uri.toString());
-                }
-
                 List<String> tagStrings = new ArrayList<>();
                 for (int i = 0; i < chipGroupTags.getChildCount(); i++){
                     Chip chip = (Chip) chipGroupTags.getChildAt(i);
@@ -327,9 +324,41 @@ public class UploadRecipeActivity extends AppCompatActivity {
                     return;
                 }
 
-                uploadRecipeToFirebase(creator, title, description, photoUrisStrings, tagStrings);
+                uploadImage(photoUris, imageUrls -> {
+                    uploadRecipeToFirebase(creator, title, description, imageUrls, tagStrings);
+                });
             }
         });
+    }
+
+    interface ImageUploadCallback {
+        void onUploadComplete(List<String> imageUrls);
+    }
+
+    private void uploadImage(List<Uri> imageUris, final ImageUploadCallback callback) {
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+        List<String> uploadedImageUrls = new ArrayList<>();
+        AtomicInteger remainingUploads = new AtomicInteger(imageUris.size());
+
+        for (Uri imageUri : imageUris){
+            String fileName = "images/" + UUID.randomUUID().toString() + ".jpg";
+            StorageReference imageRef = storageRef.child(fileName);
+
+            imageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+
+                imageRef.getDownloadUrl().addOnSuccessListener(uriDownload -> {
+                    uploadedImageUrls.add(uriDownload.toString());
+
+                    if (remainingUploads.decrementAndGet() == 0) {
+                        callback.onUploadComplete(uploadedImageUrls);
+                    }
+                });
+            }).addOnFailureListener(e -> {
+                    Log.e("UploadRecipe", "Failed to upload image: " + imageUri.toString(), e);
+            });
+        }
     }
 
     private void uploadRecipeToFirebase(String creator, String title, String description, List<String> photoUris, List<String> tags) {
