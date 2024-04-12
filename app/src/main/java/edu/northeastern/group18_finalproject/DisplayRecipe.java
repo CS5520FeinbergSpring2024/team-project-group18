@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +31,7 @@ public class DisplayRecipe extends AppCompatActivity {
     private TextView recipeCreatorTextView;
     private TextView recipeDescriptionTextView;
     private TextView recipeTagsTextView;
+    private TextView recipeCookingTimeTextView,recipeIngredientsTextView, recipeDirectionsTextView ;
     private RecyclerView recipeImagesRecyclerView;
     private DatabaseReference recipesRef;
 
@@ -45,6 +47,10 @@ public class DisplayRecipe extends AppCompatActivity {
         recipeNameTextView = findViewById(R.id.recipeNameTextView);
         recipeCreatorTextView = findViewById(R.id.recipeCreatorTextView);
         recipeDescriptionTextView = findViewById(R.id.recipeDescriptionTextView);
+        recipeCookingTimeTextView = findViewById(R.id.recipeCookingTimeTextView);
+        recipeIngredientsTextView = findViewById(R.id.recipeIngredientsTextView);
+        recipeDirectionsTextView = findViewById(R.id.recipeDirectionsTextView);
+
         recipeTagsTextView = findViewById(R.id.recipeTagsTextView);
         recipeImagesRecyclerView = findViewById(R.id.recipeImagesRecyclerView);
 
@@ -194,11 +200,12 @@ public class DisplayRecipe extends AppCompatActivity {
 
     private void populateUIWithRecipe(Recipe recipe) {
         recipeNameTextView.setText(recipe.getName());
-        recipeCreatorTextView.setText(recipe.getCreator());
+        recipeCreatorTextView.setText("Posted by: " + recipe.getCreator());
         recipeDescriptionTextView.setText(recipe.getDescription());
-
+        recipeCookingTimeTextView.setText(recipe.getCookingTime());
+        recipeIngredientsTextView.setText(recipe.getIngredients());
+        recipeDescriptionTextView.setText(recipe.getDescription());
         recipeTagsTextView.setText(TextUtils.join(", ", recipe.getTags()));
-
 
         // Set up RecyclerView for recipe images
 
