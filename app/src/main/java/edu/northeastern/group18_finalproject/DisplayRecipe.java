@@ -13,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +35,11 @@ public class DisplayRecipe extends AppCompatActivity {
     private TextView recipeDescriptionTextView;
     private TextView recipeTagsTextView;
     private TextView recipeCookingTimeTextView,recipeIngredientsTextView, recipeDirectionsTextView ;
-    private RecyclerView recipeImagesRecyclerView;
+
+    private ViewPager2 recipeImagesView;
+    private TabLayout tabLayout;
+
+//    private RecyclerView recipeImagesRecyclerView;
     private DatabaseReference recipesRef;
 
     private DatabaseReference usersRef;
@@ -52,7 +59,11 @@ public class DisplayRecipe extends AppCompatActivity {
         recipeDirectionsTextView = findViewById(R.id.recipeDirectionsTextView);
 
         recipeTagsTextView = findViewById(R.id.recipeTagsTextView);
-        recipeImagesRecyclerView = findViewById(R.id.recipeImagesRecyclerView);
+        tabLayout = findViewById(R.id.viewPagerIndicator);
+
+        recipeImagesView = findViewById(R.id.recipeImagesView);
+
+//        recipeImagesRecyclerView = findViewById(R.id.recipeImagesRecyclerView);
 
         recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
@@ -207,17 +218,20 @@ public class DisplayRecipe extends AppCompatActivity {
         recipeDescriptionTextView.setText(recipe.getDescription());
         recipeTagsTextView.setText(TextUtils.join(", ", recipe.getTags()));
 
-        // Set up RecyclerView for recipe images
 
         if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            recipeImagesRecyclerView.setLayoutManager(layoutManager);
             RecipeImageAdapter adapter = new RecipeImageAdapter(recipe.getImageUrl());
-            recipeImagesRecyclerView.setAdapter(adapter);
-            recipeImagesRecyclerView.setVisibility(View.VISIBLE);
+            recipeImagesView.setAdapter(adapter);
+            recipeImagesView.setVisibility(View.VISIBLE);
+
+            new TabLayoutMediator(tabLayout, recipeImagesView,
+                    (tab, position) -> {
+                    }).attach();
+
         } else {
-            recipeImagesRecyclerView.setVisibility(View.GONE);
+            recipeImagesView.setVisibility(View.GONE);
         }
+
     }
 
     private void addFriend(String creatorUsername) {

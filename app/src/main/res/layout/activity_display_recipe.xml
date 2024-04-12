@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/backgroundPink"
+    >
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -41,27 +49,40 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addFriendButton"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        style="@style/CustomOutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Friend"
+        android:textColor="@color/black"
         android:onClick="onAddFriendButtonClick"
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toEndOf="@id/recipeCreatorTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appIcon"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recipeImagesRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/recipeImagesView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addFriendButton"
-        app:layout_constraintBottom_toTopOf="@id/recipeNameTextView"/>
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addFriendButton" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/viewPagerIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="10dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/backgroundPink"
+        app:tabIndicatorHeight="0dp"
+        app:tabBackground="@drawable/tab_selector"
+        app:layout_constraintTop_toBottomOf="@id/recipeImagesView"
+        app:layout_constraintStart_toStartOf="@id/recipeImagesView"
+        app:layout_constraintEnd_toEndOf="@id/recipeImagesView" />
 
     <TextView
         android:id="@+id/recipeNameTextView"
@@ -74,7 +95,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipeImagesRecyclerView"/>
+        app:layout_constraintTop_toBottomOf="@id/viewPagerIndicator"/>
 
     <TextView
         android:id="@+id/recipeDescriptionTextView"
@@ -138,3 +159,4 @@
         app:layout_constraintTop_toBottomOf="@id/recipeIngredientsTextView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
