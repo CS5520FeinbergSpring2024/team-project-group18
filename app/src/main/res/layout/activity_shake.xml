@@ -50,31 +50,6 @@
         app:layout_constraintTop_toBottomOf="@id/appIcon"
         app:srcCompat="@mipmap/shake" />
 
-<!--    <ImageButton-->
-<!--        android:id="@+id/uploadRecipeButton"-->
-<!--        android:layout_width="55dp"-->
-<!--        android:layout_height="52dp"-->
-<!--        android:layout_marginBottom="25dp"-->
-<!--        android:background="@android:color/transparent"-->
-<!--        android:scaleType="fitCenter"-->
-<!--        android:src="@drawable/ic_addbutton"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/textView" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/friendListButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Friend List"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/uploadRecipeButton"  />-->
-
     <LinearLayout
         android:id="@+id/toolBar"
         android:layout_width="match_parent"

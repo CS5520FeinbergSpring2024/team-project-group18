@@ -72,39 +72,7 @@ public class ShakeActivity extends AppCompatActivity {
             }
         });
 
-
-//        ImageButton uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
-//        uploadRecipeButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view){
-//                Intent intent = new Intent(ShakeActivity.this, UploadRecipeActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.bottom_navigation_menu, menu);
-//        return true;
-//    }
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        Log.d("MenuItemClicked", "Clicked item ID: " + item.getItemId());
-//        // Handle item selection
-//        if (item.getItemId() == R.id.uploadRecipe) {
-//            // Handle upload recipe click
-//            uploadRecipe();
-//            return true;
-//        } else if (item.getItemId() == R.id.friendList) {
-//            // Handle friend list click
-//            openFriendList();
-//            return true;
-//        } else {
-//            return super.onOptionsItemSelected(item);
-//        }
-//    }
 
     private void uploadRecipe() {
         Intent intent = new Intent(ShakeActivity.this, UploadRecipeActivity.class);
