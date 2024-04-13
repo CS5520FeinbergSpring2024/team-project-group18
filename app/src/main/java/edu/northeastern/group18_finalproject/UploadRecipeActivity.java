@@ -1,5 +1,6 @@
 package edu.northeastern.group18_finalproject;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -94,8 +95,34 @@ public class UploadRecipeActivity extends AppCompatActivity {
         addPhotoButton = findViewById(R.id.addPhotoButton);
         postRecipeButton = findViewById(R.id.postRecipeButton);
 
+        if(savedInstanceState != null){
+            ArrayList<Uri> savedPhotoUris = savedInstanceState.getParcelableArrayList("photoUris");
+            if (savedPhotoUris != null) {
+                photoUris.addAll(savedPhotoUris);
+                for (Uri uri : savedPhotoUris) {
+                    addPhotoToGridLayout(uri);
+                }
+            }
+
+            int visibility = savedInstanceState.getInt("addButtonVisibility");
+            addPhotoButton.setVisibility(visibility);
+
+            ArrayList<String> tagTexts = savedInstanceState.getStringArrayList("tagTexts");
+            ArrayList<Integer> tagStates = savedInstanceState.getIntegerArrayList("tagStates");
+
+            chipGroupTags.removeAllViews();
+
+            if (tagTexts != null && tagStates != null) {
+                for (int i = 0; i < tagTexts.size(); i++) {
+                    boolean isChecked = tagStates.get(i) == 1;
+                    addTagToGroup(tagTexts.get(i), isChecked);
+                }
+            }
+        } else {
+            presetTags();
+        }
+
         addPhotoOptions();
-        presetTags();
         setAddTagButton();
         postRecipe();
         }
@@ -184,6 +211,10 @@ public class UploadRecipeActivity extends AppCompatActivity {
                 if (data != null) {
                     if (data.getClipData() != null) {
                         int count = data.getClipData().getItemCount();
+                        if (count > MAX_PHOTOS - photoUris.size()){
+                            showPhotoLimitAlert();
+                            return;
+                        }
                         int numToAdd = Math.min(count, MAX_PHOTOS - photoUris.size());
                         for (int i = 0; i < numToAdd; i++) {
                             selectedPhotoURI = data.getClipData().getItemAt(i).getUri();
@@ -202,6 +233,20 @@ public class UploadRecipeActivity extends AppCompatActivity {
         if (photoUris.size() == MAX_PHOTOS) {
             addPhotoButton.setVisibility(View.GONE);
         }
+    }
+
+    private void showPhotoLimitAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Exceeded Photo Limit");
+        builder.setMessage("You can only select up to " + MAX_PHOTOS + " photos.");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void addPhotoToGridLayout(Uri photoUri) {
@@ -232,17 +277,24 @@ public class UploadRecipeActivity extends AppCompatActivity {
         photoGridLayout.addView(photoItemLayout);
     }
 
+    private void addTagToGroup(String tagText, boolean isChecked){
+        Chip chip = new Chip(this);
+        chip.setId(View.generateViewId());
+        chip.setText(tagText);
+        chip.setBackgroundColor(R.color.purple);
+        chip.setClickable(true);
+        chip.setCheckable(true);
+        chip.setChecked(isChecked);
+        chipGroupTags.addView(chip);
+    }
+
     private void presetTags(){
 
         String[] presetTags = {"Food1", "Food2", "Food3"};
 
         for (String tag : presetTags){
-            Chip chip = new Chip(this);
-            chip.setText(tag);
-            chip.setBackgroundColor(R.color.purple);
-            chip.setClickable(true);
-            chip.setCheckable(true);
-            chipGroupTags.addView(chip);
+            addTagToGroup(tag, false);
+
         }
     }
 
@@ -260,12 +312,7 @@ public class UploadRecipeActivity extends AppCompatActivity {
                     String tagText = input.getText().toString();
 
                     if(!tagText.isEmpty()){
-                        Chip chip = new Chip(UploadRecipeActivity.this);
-                        chip.setText(tagText);
-                        chip.setBackgroundColor(R.color.purple);
-                        chip.setClickable(true);
-                        chip.setCheckable(true);
-                        chipGroupTags.addView(chip);
+                        addTagToGroup(tagText, false);
                     }
                 }));
 
@@ -389,12 +436,25 @@ public class UploadRecipeActivity extends AppCompatActivity {
     }
 
 
-    public void logPhotoUris(List<Uri> uris){
-        StringBuilder sb = new StringBuilder("Photo URIs: ");
-        for (Uri uri : photoUris) {
-            sb.append(uri.toString()).append("; ");
-        }
-        Log.d("PHOTOURI", sb.toString());
-    }
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
 
+        if (!photoUris.isEmpty()) {
+            outState.putParcelableArrayList("photoUris", new ArrayList<>(photoUris));
+        }
+
+        outState.putInt("addButtonVisibility", addPhotoButton.getVisibility());
+
+        ArrayList<String> tagTexts = new ArrayList<>();
+        ArrayList<Integer> tagStates = new ArrayList<>();
+
+        for (int i = 0; i < chipGroupTags.getChildCount(); i++) {
+            Chip chip = (Chip) chipGroupTags.getChildAt(i);
+            tagTexts.add(chip.getText().toString());
+            tagStates.add(chip.isChecked() ? 1 : 0);
+        }
+        outState.putStringArrayList("tagTexts", tagTexts);
+        outState.putIntegerArrayList("tagStates", tagStates);
+    }
 }
