@@ -75,7 +75,7 @@ public class DisplayRecipe extends AppCompatActivity {
             fetchRecipeById(recipeId);
 
         } else {
-            fetchRecipeCountAndRandomRecipe();
+            fetchRandomRecipe();
 //            fetchFirstRecipe();
         }
 
@@ -120,40 +120,23 @@ public class DisplayRecipe extends AppCompatActivity {
         });
     }
 
-    private void fetchRecipeCountAndRandomRecipe() {
+    private void fetchRandomRecipe() {
         recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                long count = dataSnapshot.getChildrenCount();
-                if (count > 0) {
-                    int randomIndex = new Random().nextInt((int) count);
-                    fetchRandomRecipe(randomIndex);
-                } else {
-                    Toast.makeText(DisplayRecipe.this, "No recipes found in the database", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(DisplayRecipe.this, "Error fetching recipe count: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void fetchRandomRecipe(final int randomIndex) {
-        recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int currentIndex = 0;
+                List<Recipe> recipes = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    if (currentIndex == randomIndex) {
-                        Recipe recipe = snapshot.getValue(Recipe.class);
-                        if (recipe != null) {
-                            populateUIWithRecipe(recipe);
-                            break;
-                        }
+                    Recipe recipe = snapshot.getValue(Recipe.class);
+                    if (recipe != null && recipe.getCreator() != UserSession.getUsername()) {
+                        recipes.add(recipe);
                     }
-                    currentIndex++;
+                }
+                if (!recipes.isEmpty()) {
+                    int randomIndex = new Random().nextInt(recipes.size());
+                    Recipe randomRecipe = recipes.get(randomIndex);
+                    populateUIWithRecipe(randomRecipe);
+                } else {
+                    Toast.makeText(DisplayRecipe.this, "No recipes found that were not posted by you", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -163,6 +146,61 @@ public class DisplayRecipe extends AppCompatActivity {
             }
         });
     }
+
+
+//    private void fetchRecipeCountAndRandomRecipe() {
+//        recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                List<Recipe> recipes = new ArrayList<>();
+//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                    Recipe recipe = snapshot.getValue(Recipe.class);
+//                    if (recipe != null && recipe.getCreator() != UserSession.getUsername()) {
+//                        recipes.add(recipe);
+//                    }
+//                }
+//                long count = recipes.size();
+//                if (count > 0) {
+//                    int randomIndex = new Random().nextInt((int) count);
+//
+//                } else {
+//                    Toast.makeText(DisplayRecipe.this, "No recipes found in the database", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Toast.makeText(DisplayRecipe.this, "Error fetching recipe count: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+//
+//    private void fetchRandomRecipe(final int randomIndex, final ArrayList recipes) {
+//        recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                int currentIndex = 0;
+//                for (recipe : recipes) {
+//                    if (currentIndex == randomIndex) {
+//                        Recipe recipe = snapshot.getValue(Recipe.class);
+//                        if (recipe.getCreator() == UserSession.getUsername()){
+//                            continue;
+//                        }
+//                        if (recipe != null) {
+//                            populateUIWithRecipe(recipe);
+//                            break;
+//                        }
+//                    }
+//                    currentIndex++;
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//                Toast.makeText(DisplayRecipe.this, "Error fetching random recipe: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
 
 
