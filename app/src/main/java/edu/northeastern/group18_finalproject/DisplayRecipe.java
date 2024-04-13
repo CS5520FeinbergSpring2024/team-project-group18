@@ -127,7 +127,7 @@ public class DisplayRecipe extends AppCompatActivity {
                 List<Recipe> recipes = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Recipe recipe = snapshot.getValue(Recipe.class);
-                    if (recipe != null && recipe.getCreator() != UserSession.getUsername()) {
+                    if (recipe != null && !recipe.getCreator().equals(UserSession.getUsername())) {
                         recipes.add(recipe);
                     }
                 }
