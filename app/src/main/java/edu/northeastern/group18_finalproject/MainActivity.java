@@ -52,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
     private void loginUser() {
         final String username = usernameEditText.getText().toString().trim();
 
