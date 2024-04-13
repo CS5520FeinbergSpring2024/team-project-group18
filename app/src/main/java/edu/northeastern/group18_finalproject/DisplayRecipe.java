@@ -174,7 +174,7 @@ public class DisplayRecipe extends AppCompatActivity {
 
     private void populateUIWithRecipe(Recipe recipe) {
         recipeNameTextView.setText(recipe.getName());
-        recipeCreatorTextView.setText("Posted by: " + recipe.getCreator());
+        recipeCreatorTextView.setText(recipe.getCreator());
         recipeDescriptionTextView.setText(recipe.getDescription());
         recipeCookingTimeTextView.setText(recipe.getCookingTime());
         recipeIngredientsTextView.setText(recipe.getIngredients());

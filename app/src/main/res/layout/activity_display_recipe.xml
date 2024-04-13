@@ -18,59 +18,65 @@
         android:layout_height="70dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toTopOf="@id/recipeCreatorTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/g18_ic" />
-
-    <TextView
-        android:id="@+id/recipeTagsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginStart="50dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/addFriendButton"/>
-
-    <TextView
-        android:id="@+id/recipeCreatorTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/addFriendButton"
-        app:layout_constraintTop_toBottomOf="@id/appIcon"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/addFriendButton"
         style="@style/CustomOutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Friend"
-        android:textColor="@color/black"
+        android:layout_marginStart="180dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="30dp"
         android:onClick="onAddFriendButtonClick"
+        android:text="Add Friend"
+        android:textColor="@color/titleTextColor"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/recipeTagsTextView"
+        app:layout_constraintStart_toEndOf="@id/appIcon" />
+
+    <TextView
+        android:id="@+id/recipeTagsTextView"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/tagTextColor"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintStart_toEndOf="@id/recipeCreatorTextView"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appIcon"/>
+        app:layout_constraintBottom_toTopOf="@id/recipeImagesView"/>
+
+    <TextView
+        android:id="@+id/recipeCreatorTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/titleTextColor"
+        android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/recipeTagsTextView"
+        app:layout_constraintTop_toBottomOf="@id/appIcon"
+        app:layout_constraintBottom_toTopOf="@id/recipeImagesView"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/recipeImagesView"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addFriendButton" />
+        app:layout_constraintTop_toBottomOf="@id/recipeCreatorTextView" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/viewPagerIndicator"
@@ -90,6 +96,7 @@
         android:layout_height="wrap_content"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/titleTextColor"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -102,6 +109,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="20sp"
+        android:textColor="@color/boldTextColor"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -113,50 +121,112 @@
         android:id="@+id/cookingTimeText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Estimated Time(mins): "
+        android:textColor="@color/titleTextColor"
+        android:text="Estimated Time (mins): "
         android:textSize="16sp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/recipeCookingTimeTextView"
         app:layout_constraintTop_toBottomOf="@id/recipeDescriptionTextView"/>
 
     <TextView
         android:id="@+id/recipeCookingTimeTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/boldTextColor"
         android:textSize="16sp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cookingTimeText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipeDescriptionTextView"/>
 
     <TextView
-        android:id="@+id/recipeIngredientsTextView"
+        android:id="@+id/ingredientsText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/titleTextColor"
+        android:text="Ingredients: "
         android:textSize="16sp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipeCookingTimeTextView"/>
 
     <TextView
-        android:id="@+id/recipeDirectionsTextView"
+        android:id="@+id/recipeIngredientsTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textColor="@color/boldTextColor"
+        android:textSize="16sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ingredientsText"/>
+
+    <TextView
+        android:id="@+id/directionsText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/titleTextColor"
+        android:text="Directions: "
         android:textSize="16sp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recipeIngredientsTextView"/>
+
+    <TextView
+        android:id="@+id/recipeDirectionsTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/boldTextColor"
+        android:textSize="16sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/directionsText"/>
+
+
+    <ImageButton
+        android:id="@+id/shareRecipeButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_sharebutton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recipeDirectionsTextView" />
+
+
+    <ImageButton
+        android:id="@+id/likeRecipeButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="10dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_likebutton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/shareRecipeButton"
+        app:layout_constraintTop_toBottomOf="@id/recipeDirectionsTextView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
