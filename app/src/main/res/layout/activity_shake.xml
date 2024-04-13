@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShakeActivity"
-    android:background="@color/backgroundPink">
+    android:fillViewport="true"
+    android:background="@color/backgroundPink"
+    >
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShakeActivity">
 
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="100dp"
         android:text="Shake to Inspire!"
-        android:textColor="#FF8700"
+        android:textColor="@color/textColor"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@id/uploadRecipeButton"
+        app:layout_constraintBottom_toTopOf="@id/toolBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/shakeImg" />
@@ -38,36 +43,58 @@
         android:layout_width="188dp"
         android:layout_height="208dp"
         android:layout_marginTop="40dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appIcon"
         app:srcCompat="@mipmap/shake" />
 
-    <ImageButton
-        android:id="@+id/uploadRecipeButton"
-        android:layout_width="55dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="25dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_addbutton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/uploadRecipeButton"-->
+<!--        android:layout_width="55dp"-->
+<!--        android:layout_height="52dp"-->
+<!--        android:layout_marginBottom="25dp"-->
+<!--        android:background="@android:color/transparent"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        android:src="@drawable/ic_addbutton"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/textView" />-->
 
-    <Button
-        android:id="@+id/friendListButton"
-        android:layout_width="wrap_content"
+<!--    <Button-->
+<!--        android:id="@+id/friendListButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Friend List"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/uploadRecipeButton"  />-->
+
+    <LinearLayout
+        android:id="@+id/toolBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Friend List"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/toolBarPink"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/uploadRecipeButton"  />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
+            android:background="@color/toolBarPink"
+            app:itemBackground="@android:color/transparent"
+            app:itemIconTint="@color/textColor"
+            app:itemTextColor="@color/textColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/bottom_navigation_menu" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

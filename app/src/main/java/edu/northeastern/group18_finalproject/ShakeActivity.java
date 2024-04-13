@@ -1,7 +1,10 @@
 package edu.northeastern.group18_finalproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -9,16 +12,19 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.List;
 
 public class ShakeActivity extends AppCompatActivity {
     private ShakeDetector shakeDetector;
-    private Button friendListButton;
     private SensorManager sensorManager;
     private Sensor accelerometer;
     @Override
@@ -44,31 +50,69 @@ public class ShakeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        ImageButton uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
-        uploadRecipeButton.setOnClickListener(new View.OnClickListener(){
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view){
-                Intent intent = new Intent(ShakeActivity.this, UploadRecipeActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        friendListButton = findViewById(R.id.friendListButton);
-        friendListButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Start the FriendListActivity
-//                startActivity(new Intent(ShakeActivity.this, FriendListActivity.class));
-                try {
-                    // Start the FriendListActivity
-                    startActivity(new Intent(ShakeActivity.this, FriendListActivity.class));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("MainActivity", "Error starting FriendListActivity: " + e.getMessage());
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Log.d("MenuItemClicked", "Clicked item ID: " + item.getItemId());
+                if (item.getItemId() == R.id.invisible_item) {
+                    return false;
+                } else if (item.getItemId() == R.id.uploadRecipe) {
+                    // Handle upload recipe click
+                    uploadRecipe();
+                    return true;
+                } else if (item.getItemId() == R.id.friendList) {
+                    // Handle friend list click
+                    openFriendList();
+                    return true;
+                } else {
+                    return false;
                 }
             }
         });
+
+
+//        ImageButton uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
+//        uploadRecipeButton.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View view){
+//                Intent intent = new Intent(ShakeActivity.this, UploadRecipeActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+
+    }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.bottom_navigation_menu, menu);
+//        return true;
+//    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        Log.d("MenuItemClicked", "Clicked item ID: " + item.getItemId());
+//        // Handle item selection
+//        if (item.getItemId() == R.id.uploadRecipe) {
+//            // Handle upload recipe click
+//            uploadRecipe();
+//            return true;
+//        } else if (item.getItemId() == R.id.friendList) {
+//            // Handle friend list click
+//            openFriendList();
+//            return true;
+//        } else {
+//            return super.onOptionsItemSelected(item);
+//        }
+//    }
+
+    private void uploadRecipe() {
+        Intent intent = new Intent(ShakeActivity.this, UploadRecipeActivity.class);
+        startActivity(intent);
+    }
+
+    private void openFriendList() {
+        startActivity(new Intent(ShakeActivity.this, FriendListActivity.class));
     }
 
     @Override

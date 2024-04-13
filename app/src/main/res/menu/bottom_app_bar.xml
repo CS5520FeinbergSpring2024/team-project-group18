@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/friendsIcon"
+        android:icon="@drawable/friends"
+        android:title="friends"
+        android:contentDescription="show_friends_list"
+        />
+
+<!--    <item-->
+<!--        android:id="@+id/more"-->
+<!--        android:title="more"-->
+<!--        android:contentDescription="content_description_more"-->
+<!--        app:showAsAction="never"-->
+<!--        />-->
+</menu>
