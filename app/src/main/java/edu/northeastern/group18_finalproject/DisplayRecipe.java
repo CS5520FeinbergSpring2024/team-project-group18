@@ -262,7 +262,6 @@ public class DisplayRecipe extends AppCompatActivity {
                 Log.e("Firebase", "Error checking friends list: " + databaseError.getMessage());
             }
         });
-
     }
 
     private void updateFriendButtonUI() {
