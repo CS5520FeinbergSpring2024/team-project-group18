@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -18,7 +19,8 @@ import java.util.List;
 public class ShakeActivity extends AppCompatActivity {
     private ShakeDetector shakeDetector;
     private Button friendListButton;
-
+    private SensorManager sensorManager;
+    private Sensor accelerometer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,9 +29,9 @@ public class ShakeActivity extends AppCompatActivity {
         // Initialize ShakeDetector
         shakeDetector = new ShakeDetector();
         // Register ShakeDetector with the accelerometer sensor
-        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if (sensorManager != null) {
-            Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             if (accelerometer != null) {
                 sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             }
@@ -38,14 +40,10 @@ public class ShakeActivity extends AppCompatActivity {
         shakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
             @Override
             public void onShake() {
-                // Perform action when shake is detected
-                Log.d("Detected!", "detected!!!!!!");
                 Intent intent = new Intent(ShakeActivity.this, DisplayRecipe.class);
                 startActivity(intent);
             }
         });
-
-
 
         ImageButton uploadRecipeButton = findViewById(R.id.uploadRecipeButton);
         uploadRecipeButton.setOnClickListener(new View.OnClickListener(){
@@ -71,6 +69,24 @@ public class ShakeActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Register ShakeDetector with the accelerometer sensor
+        if (accelerometer != null && sensorManager != null) {
+            sensorManager.registerListener(shakeDetector, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister ShakeDetector when the activity is paused
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(shakeDetector);
+        }
     }
 
     @Override

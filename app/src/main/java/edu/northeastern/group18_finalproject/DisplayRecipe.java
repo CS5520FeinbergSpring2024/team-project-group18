@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -43,6 +44,8 @@ public class DisplayRecipe extends AppCompatActivity {
     private DatabaseReference recipesRef;
 
     private DatabaseReference usersRef;
+    private int currentImagePosition = 0;
+    private List<String> imgUrls;
 //    private User currentUser;
 //    private User recipeCreator;
 
@@ -63,21 +66,42 @@ public class DisplayRecipe extends AppCompatActivity {
 
         recipeImagesView = findViewById(R.id.recipeImagesView);
 
-//        recipeImagesRecyclerView = findViewById(R.id.recipeImagesRecyclerView);
-
         recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
-        // Fetch and display the first recipe from the database
+        if (savedInstanceState != null) {
+            // Restore state from savedInstanceState
+            recipeNameTextView.setText(savedInstanceState.getString("recipeName"));
+            recipeCreatorTextView.setText(savedInstanceState.getString("creatorName"));
+            recipeDescriptionTextView.setText(savedInstanceState.getString("Description"));
+            recipeCookingTimeTextView.setText(savedInstanceState.getString("cookTime"));
+            recipeIngredientsTextView.setText(savedInstanceState.getString("ingredient"));
+            recipeDirectionsTextView.setText(savedInstanceState.getString("direction"));
+            recipeTagsTextView.setText(savedInstanceState.getString("tags"));
+            String[] imgUrlsArray = savedInstanceState.getStringArray("imgUrlsArray");
+            if (imgUrlsArray != null) {
+                imgUrls = Arrays.asList(imgUrlsArray);
+            }
+            currentImagePosition = savedInstanceState.getInt("currentImagePosition");
 
-        String recipeId = getIntent().getStringExtra("recipeId");
-        if (recipeId != null) {
-            fetchRecipeById(recipeId);
+            RecipeImageAdapter adapter = new RecipeImageAdapter(imgUrls);
+            recipeImagesView.setAdapter(adapter);
+            recipeImagesView.setVisibility(View.VISIBLE);
 
+            new TabLayoutMediator(tabLayout, recipeImagesView,
+                    (tab, position) -> {
+                        currentImagePosition = position;
+                    }).attach();
         } else {
-            fetchRandomRecipe();
-//            fetchFirstRecipe();
+            // Fetch and display the first recipe from the database
+            String recipeId = getIntent().getStringExtra("recipeId");
+            if (recipeId != null) {
+                fetchRecipeById(recipeId);
+            } else {
+                fetchRandomRecipe();
+            }
         }
+
 
         Button addFriendButton = findViewById(R.id.addFriendButton);
         addFriendButton.setOnClickListener(new View.OnClickListener() {
@@ -148,105 +172,6 @@ public class DisplayRecipe extends AppCompatActivity {
     }
 
 
-//    private void fetchRecipeCountAndRandomRecipe() {
-//        recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                List<Recipe> recipes = new ArrayList<>();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Recipe recipe = snapshot.getValue(Recipe.class);
-//                    if (recipe != null && recipe.getCreator() != UserSession.getUsername()) {
-//                        recipes.add(recipe);
-//                    }
-//                }
-//                long count = recipes.size();
-//                if (count > 0) {
-//                    int randomIndex = new Random().nextInt((int) count);
-//
-//                } else {
-//                    Toast.makeText(DisplayRecipe.this, "No recipes found in the database", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Toast.makeText(DisplayRecipe.this, "Error fetching recipe count: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-//    private void fetchRandomRecipe(final int randomIndex, final ArrayList recipes) {
-//        recipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                int currentIndex = 0;
-//                for (recipe : recipes) {
-//                    if (currentIndex == randomIndex) {
-//                        Recipe recipe = snapshot.getValue(Recipe.class);
-//                        if (recipe.getCreator() == UserSession.getUsername()){
-//                            continue;
-//                        }
-//                        if (recipe != null) {
-//                            populateUIWithRecipe(recipe);
-//                            break;
-//                        }
-//                    }
-//                    currentIndex++;
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Toast.makeText(DisplayRecipe.this, "Error fetching random recipe: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
-
-
-
-
-//    private void fetchFirstRecipe() {
-//        recipesRef.limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    DataSnapshot firstRecipeSnapshot = dataSnapshot.getChildren().iterator().next();
-//
-//                    String recipeId = firstRecipeSnapshot.getKey();
-//                    String recipeName = firstRecipeSnapshot.child("name").getValue(String.class);
-//                    String recipesCreator = firstRecipeSnapshot.child("creator").getValue(String.class);
-//                    String recipeDescription = firstRecipeSnapshot.child("description").getValue(String.class);
-//
-//                    List<String> tags = new ArrayList<>();
-//                    for (DataSnapshot tagSnapshot : firstRecipeSnapshot.child("tags").getChildren()) {
-//                       tags.add(tagSnapshot.getValue().toString());
-////                        String tag = tagSnapshot.getValue(String.class);
-////                        tags.add(tag);
-//                    }
-//
-//                    List<String> imageUrls = new ArrayList<>();
-//                    for (DataSnapshot imageSnapshot : firstRecipeSnapshot.child("imageUrl").getChildren()) {
-//                        imageUrls.add(imageSnapshot.getValue().toString());
-////                        String imageUrl = imageSnapshot.getValue(String.class);
-////                        imageUrls.add(imageUrl);
-//
-//                    }
-//
-//                    Recipe firstRecipe = new Recipe(recipeId, recipeName, recipesCreator, recipeDescription, tags, imageUrls);
-//                    populateUIWithRecipe(firstRecipe);
-//                } else {
-//                    Toast.makeText(DisplayRecipe.this, "No recipes found in the database", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                Log.e("Firebase", "Error fetching recipe data: " + databaseError.getMessage());
-//            }
-//        });
-//    }
-
     private void populateUIWithRecipe(Recipe recipe) {
         recipeNameTextView.setText(recipe.getName());
         recipeCreatorTextView.setText("Posted by: " + recipe.getCreator());
@@ -258,12 +183,14 @@ public class DisplayRecipe extends AppCompatActivity {
 
 
         if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
+            imgUrls = recipe.getImageUrl();
             RecipeImageAdapter adapter = new RecipeImageAdapter(recipe.getImageUrl());
             recipeImagesView.setAdapter(adapter);
             recipeImagesView.setVisibility(View.VISIBLE);
 
             new TabLayoutMediator(tabLayout, recipeImagesView,
                     (tab, position) -> {
+                        currentImagePosition = position;
                     }).attach();
 
         } else {
@@ -308,4 +235,28 @@ public class DisplayRecipe extends AppCompatActivity {
         addFriendButton.setText("Friend Added");
         addFriendButton.setEnabled(false); // Disable the button after the user has added the friend
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("recipeName", recipeNameTextView.getText().toString());
+        outState.putString("creatorName", recipeCreatorTextView.getText().toString());
+        outState.putString("Description", recipeDescriptionTextView.getText().toString());
+        outState.putString("cookTime", recipeCookingTimeTextView.getText().toString());
+        outState.putString("ingredient", recipeIngredientsTextView.getText().toString());
+        outState.putString("direction", recipeDirectionsTextView.getText().toString());
+        outState.putString("tags", recipeTagsTextView.getText().toString());
+
+        if (imgUrls != null) {
+            String[] imgUrlsArray = new String[imgUrls.size()];
+            imgUrlsArray = imgUrls.toArray(imgUrlsArray);
+            outState.putStringArray("imgUrlsArray", imgUrlsArray);
+        } else {
+            outState.putStringArray("imgUrlsArray", null);
+        }
+
+        outState.putInt("currentImagePosition", currentImagePosition);
+    }
+
 }
