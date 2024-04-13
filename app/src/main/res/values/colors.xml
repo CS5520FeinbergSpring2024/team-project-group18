@@ -5,4 +5,9 @@
     <color name="purple">#85673AB7</color>
     <color name="iconBlue">#A4C5CA</color>
     <color name="backgroundPink">#FFD9E0</color>
+
+    <color name="button_background_color">#FFD9E0</color>
+    <color name="button_text_color">#673AB7</color>
+    <color name="button_stroke_color">#FF3700B3</color>
+    <color name="button_ripple_color">#A79EB5</color>
 </resources>

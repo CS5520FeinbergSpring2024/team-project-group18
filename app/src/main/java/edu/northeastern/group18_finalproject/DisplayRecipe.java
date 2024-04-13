@@ -13,7 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,7 +34,12 @@ public class DisplayRecipe extends AppCompatActivity {
     private TextView recipeCreatorTextView;
     private TextView recipeDescriptionTextView;
     private TextView recipeTagsTextView;
-    private RecyclerView recipeImagesRecyclerView;
+    private TextView recipeCookingTimeTextView,recipeIngredientsTextView, recipeDirectionsTextView ;
+
+    private ViewPager2 recipeImagesView;
+    private TabLayout tabLayout;
+
+//    private RecyclerView recipeImagesRecyclerView;
     private DatabaseReference recipesRef;
 
     private DatabaseReference usersRef;
@@ -45,8 +54,16 @@ public class DisplayRecipe extends AppCompatActivity {
         recipeNameTextView = findViewById(R.id.recipeNameTextView);
         recipeCreatorTextView = findViewById(R.id.recipeCreatorTextView);
         recipeDescriptionTextView = findViewById(R.id.recipeDescriptionTextView);
+        recipeCookingTimeTextView = findViewById(R.id.recipeCookingTimeTextView);
+        recipeIngredientsTextView = findViewById(R.id.recipeIngredientsTextView);
+        recipeDirectionsTextView = findViewById(R.id.recipeDirectionsTextView);
+
         recipeTagsTextView = findViewById(R.id.recipeTagsTextView);
-        recipeImagesRecyclerView = findViewById(R.id.recipeImagesRecyclerView);
+        tabLayout = findViewById(R.id.viewPagerIndicator);
+
+        recipeImagesView = findViewById(R.id.recipeImagesView);
+
+//        recipeImagesRecyclerView = findViewById(R.id.recipeImagesRecyclerView);
 
         recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
@@ -194,23 +211,27 @@ public class DisplayRecipe extends AppCompatActivity {
 
     private void populateUIWithRecipe(Recipe recipe) {
         recipeNameTextView.setText(recipe.getName());
-        recipeCreatorTextView.setText(recipe.getCreator());
+        recipeCreatorTextView.setText("Posted by: " + recipe.getCreator());
         recipeDescriptionTextView.setText(recipe.getDescription());
-
+        recipeCookingTimeTextView.setText(recipe.getCookingTime());
+        recipeIngredientsTextView.setText(recipe.getIngredients());
+        recipeDescriptionTextView.setText(recipe.getDescription());
         recipeTagsTextView.setText(TextUtils.join(", ", recipe.getTags()));
 
 
-        // Set up RecyclerView for recipe images
-
         if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-            recipeImagesRecyclerView.setLayoutManager(layoutManager);
             RecipeImageAdapter adapter = new RecipeImageAdapter(recipe.getImageUrl());
-            recipeImagesRecyclerView.setAdapter(adapter);
-            recipeImagesRecyclerView.setVisibility(View.VISIBLE);
+            recipeImagesView.setAdapter(adapter);
+            recipeImagesView.setVisibility(View.VISIBLE);
+
+            new TabLayoutMediator(tabLayout, recipeImagesView,
+                    (tab, position) -> {
+                    }).attach();
+
         } else {
-            recipeImagesRecyclerView.setVisibility(View.GONE);
+            recipeImagesView.setVisibility(View.GONE);
         }
+
     }
 
     private void addFriend(String creatorUsername) {

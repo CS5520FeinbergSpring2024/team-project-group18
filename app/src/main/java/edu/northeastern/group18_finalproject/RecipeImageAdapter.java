@@ -1,5 +1,7 @@
 package edu.northeastern.group18_finalproject;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +10,13 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 // RecipeImageAdapter.java
+
 public class RecipeImageAdapter extends RecyclerView.Adapter<RecipeImageAdapter.ViewHolder> {
 
     private List<String> imageUrls;
@@ -24,14 +28,21 @@ public class RecipeImageAdapter extends RecyclerView.Adapter<RecipeImageAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recipe_image, parent, false);
-        return new ViewHolder(view);
+
+        ImageView imageView = new ImageView(parent.getContext());
+        imageView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        return new ViewHolder(imageView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String imageUrl = imageUrls.get(position);
-        Picasso.get().load(imageUrl).into(holder.imageView);
+        Glide.with(holder.imageView.getContext())
+                .load(imageUrls.get(position))
+                .into(holder.imageView);
     }
 
     @Override
@@ -42,9 +53,9 @@ public class RecipeImageAdapter extends RecyclerView.Adapter<RecipeImageAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(ImageView itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageView = itemView;
         }
     }
 }

@@ -7,6 +7,10 @@ public class Recipe {
     private String name;
     private String creator;
     private String description;
+    private String cookingTime;
+    private String ingredients;
+    private String directions;
+
     private List<String> tags;
     private List<String> imageUrl;
 
@@ -15,12 +19,15 @@ public class Recipe {
     }
 
 
-    public Recipe(String recipeId, String title, String creator, String description,
+    public Recipe(String recipeId, String title, String creator, String description, String cookingTime, String ingredients, String directions,
                   List<String> tags, List<String> imageUrl) {
         this.recipeId = recipeId;
         this.name = title;
         this.creator = creator;
         this.description = description;
+        this.cookingTime = cookingTime;
+        this.ingredients = ingredients;
+        this.directions = directions;
         this.tags = tags;
         this.imageUrl = imageUrl;
     }
@@ -57,6 +64,18 @@ public class Recipe {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCookingTime() {
+        return cookingTime;
+    }
+
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public String getDirections() {
+        return directions;
     }
 
     public List<String> getTags() {
