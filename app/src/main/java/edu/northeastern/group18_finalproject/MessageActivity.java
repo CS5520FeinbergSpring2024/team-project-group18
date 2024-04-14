@@ -1,6 +1,7 @@
 package edu.northeastern.group18_finalproject;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
@@ -76,6 +77,16 @@ public class MessageActivity extends AppCompatActivity {
                 messageTextview.setText(message);
                 senderTextView.setText(sender);
 
+                if (message != null && message.contains("recipeId")) {
+                    String recipeId = extractRecipeId(message);
+                    if (recipeId != null) {
+                        messageTextview.setOnClickListener(v -> {
+                        Intent displayIntent = new Intent(MessageActivity.this, DisplayRecipe.class);
+                        displayIntent.putExtra("recipeId", recipeId);
+                        startActivity(displayIntent);
+                    });
+                    }
+                }
             }
 
             @Override
@@ -85,6 +96,16 @@ public class MessageActivity extends AppCompatActivity {
 
         });
     }
+
+    private String extractRecipeId(String message) {
+        String prefix = "recipeId=";
+        int startIndex = message.indexOf(prefix);
+        if (startIndex != -1) {
+            return message.substring(startIndex + prefix.length()).trim();
+        }
+        return null;
+    }
+
 
     private void getCounter(){
         // get Counter for received message person

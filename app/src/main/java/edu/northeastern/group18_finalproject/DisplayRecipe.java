@@ -44,6 +44,9 @@ public class DisplayRecipe extends AppCompatActivity {
     private DatabaseReference usersRef;
     private int currentImagePosition = 0;
     private List<String> imgUrls;
+
+    private Recipe currentRecipe;
+
 //    private User currentUser;
 //    private User recipeCreator;
 
@@ -70,6 +73,12 @@ public class DisplayRecipe extends AppCompatActivity {
         if (savedInstanceState != null) {
             // Restore state from savedInstanceState
             restore(savedInstanceState);
+
+            String recipeId = savedInstanceState.getString("recipeId");
+            if (recipeId != null) {
+                fetchRecipeById(recipeId);
+            }
+
         } else {
             // Fetch and display the first recipe from the database
             String recipeId = getIntent().getStringExtra("recipeId");
@@ -106,6 +115,7 @@ public class DisplayRecipe extends AppCompatActivity {
                     Recipe recipe = dataSnapshot.getValue(Recipe.class);
 
                     if (recipe != null) {
+                        currentRecipe = recipe;
                         populateUIWithRecipe(recipe);
                     } else {
                         Toast.makeText(DisplayRecipe.this, "Failed to load recipe details.", Toast.LENGTH_SHORT).show();
@@ -135,6 +145,7 @@ public class DisplayRecipe extends AppCompatActivity {
                 if (!recipes.isEmpty()) {
                     int randomIndex = new Random().nextInt(recipes.size());
                     Recipe randomRecipe = recipes.get(randomIndex);
+                    currentRecipe = randomRecipe;
                     populateUIWithRecipe(randomRecipe);
                 } else {
                     Toast.makeText(DisplayRecipe.this, "No recipes found that were not posted by you", Toast.LENGTH_SHORT).show();
@@ -183,6 +194,8 @@ public class DisplayRecipe extends AppCompatActivity {
         } else{
             recipeTagsTextView.setVisibility(View.GONE);
         }
+
+        setupShareButton();
 
     }
 
@@ -245,6 +258,10 @@ public class DisplayRecipe extends AppCompatActivity {
             outState.putInt("currentImagePosition", -1);
         }
 
+        if (currentRecipe != null) {
+            outState.putString("recipeId", currentRecipe.getRecipeId());
+        }
+
     }
 
     private void restore(Bundle inState){
@@ -272,29 +289,29 @@ public class DisplayRecipe extends AppCompatActivity {
         }
     }
 
-}
 
-//    private void setupShareButton(){
-//        ImageButton shareRecipeButton = findViewById(R.id.shareRecipeButton);
-//        shareRecipeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (currentRecipe != null && currentRecipe.getRecipeId() != null) {
-//                    shareRecipe(currentRecipe.getRecipeId());
-//                } else {
-//                    Toast.makeText(DisplayRecipe.this, "No recipe loaded to share.", Toast.LENGTH_LONG).show();
-//                }
-//            }
-//        });
-//    }
-//
-//    public void shareRecipe(String recipeId) {
-//
-//        String url = "https://www.shakerecipe.com/recipe?id=" + recipeId;
-//
-//        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-//        shareIntent.setType("text/plain");
-//        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this recipe! " + url);
-//        startActivity(Intent.createChooser(shareIntent, "Share Recipe via"));
-//    }
+    private void setupShareButton(){
+        ImageButton shareRecipeButton = findViewById(R.id.shareRecipeButton);
+        shareRecipeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentRecipe != null && currentRecipe.getRecipeId() != null) {
+                    shareRecipe(currentRecipe.getRecipeId());
+                } else {
+                    Toast.makeText(DisplayRecipe.this, "No recipe loaded to share.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void shareRecipe(String recipeId) {
+
+        String message = "recipeId=" + recipeId;
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this recipe!\n" + message);
+        startActivity(Intent.createChooser(shareIntent, "Share Recipe via"));
+    }
+}
 
