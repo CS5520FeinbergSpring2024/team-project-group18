@@ -38,6 +38,7 @@ public class MessageActivity extends AppCompatActivity {
     private Button sendMessageButton;
 
     private DatabaseReference messagesRef;
+    private DatabaseReference friendMessagesRef;
     private DatabaseReference senderInfoRef;
     private String currentUsername;
     private String friendUsername;
@@ -56,15 +57,13 @@ public class MessageActivity extends AppCompatActivity {
         messageEditText = findViewById(R.id.messageEditText);
         sendMessageButton = findViewById(R.id.sendMessageButton);
 
-
-        // Get friend user ID from intent
-        // Need to import from friendlist activity
         friendUsername = getIntent().getStringExtra("friendUsername");
 
         currentUsername = UserSession.getUsername();
 
-        // Initialize Firebase Database reference
+
         messagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("message").child(friendUsername);
+        friendMessagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(friendUsername).child("message").child(currentUsername);
         // get Counter for received message
         senderInfoRef = FirebaseDatabase.getInstance().getReference().child("users").child(friendUsername).child("receiveMessageInfoMap");
         senderInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -84,15 +83,13 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        // Set up onClickListener for send message button
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendMessage();
             }
         });
-
-        // Listen for new messages
+        
         messagesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -110,6 +107,7 @@ public class MessageActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
     }
 
@@ -120,6 +118,8 @@ public class MessageActivity extends AppCompatActivity {
 
             messagesRef.child("currentMessage").setValue(messageText);
             messagesRef.child("sender").setValue(currentUsername);
+            friendMessagesRef.child("currentMessage").setValue(messageText);
+            friendMessagesRef.child("sender").setValue(currentUsername);
 
             messageEditText.setText("");
         }
