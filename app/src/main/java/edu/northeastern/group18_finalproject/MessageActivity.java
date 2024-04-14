@@ -94,7 +94,9 @@ public class MessageActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String message = dataSnapshot.child("currentMessage").getValue(String.class);
+                String sender = dataSnapshot.child("sender").getValue(String.class);
                 messageTextview.setText(message);
+                senderTextView.setText(sender);
                 counter++;
                 Map<String, Object> receiveMessageInfoMap = new HashMap<>();
                 receiveMessageInfoMap.put("counter", counter);
@@ -120,6 +122,8 @@ public class MessageActivity extends AppCompatActivity {
             messagesRef.child("sender").setValue(currentUsername);
             friendMessagesRef.child("currentMessage").setValue(messageText);
             friendMessagesRef.child("sender").setValue(currentUsername);
+            senderTextView.setText(currentUsername);
+            messageTextview.setText(messageText);
 
             messageEditText.setText("");
         }
