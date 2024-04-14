@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/backgroundPink">
 
     <TextView
         android:id="@+id/messageTextView"
@@ -15,6 +16,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/senderLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/messageTextView">
     <TextView
         android:id="@+id/senderPromptTextView"
         android:layout_width="wrap_content"
@@ -22,10 +32,7 @@
         android:layout_marginTop="10dp"
         android:textColor="@android:color/black"
         android:textSize="20sp"
-        android:text="Sender"
-        app:layout_constraintTop_toBottomOf="@id/messageTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Sender:" />
 
     <TextView
         android:id="@+id/senderTextView"
@@ -33,10 +40,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/messageTextView"
-        app:layout_constraintStart_toEndOf="@id/senderPromptTextView"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:textSize="20sp" />
+</LinearLayout>
 
     <LinearLayout
         android:id="@+id/sendMessageLayout"
@@ -46,7 +51,8 @@
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/senderLayout">
 
         <EditText
             android:id="@+id/messageEditText"
@@ -59,7 +65,10 @@
             android:id="@+id/sendMessageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send" />
+            android:text="Send"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:backgroundTint="#A4C5CA" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
