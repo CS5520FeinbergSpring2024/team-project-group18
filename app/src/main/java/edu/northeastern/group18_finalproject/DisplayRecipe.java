@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Random;
 
 public class DisplayRecipe extends AppCompatActivity {
-
     private TextView recipeNameTextView;
     private TextView recipeCreatorTextView;
     private TextView recipeDescriptionTextView;

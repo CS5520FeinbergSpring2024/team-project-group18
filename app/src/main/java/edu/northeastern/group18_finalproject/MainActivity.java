@@ -57,12 +57,12 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.iconBlue)));
         signupButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.iconBlue)));
         // Notify user to open notification
-        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivity(intent);
-        }
+//        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+//            Intent intent = new Intent();
+//            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+//            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+//            startActivity(intent);
+//        }
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     UserSession.setUsername(username);
-                    userMessagesRef = usersRef.child(username).child("receiveMessageInfoMap");
-                    addmessageListener();
+//                    userMessagesRef = usersRef.child(username).child("receiveMessageInfoMap");
+//                    addmessageListener();
                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, ShakeActivity.class); /*DisplayRecipe ShakeActivity*/
                     startActivity(intent);
