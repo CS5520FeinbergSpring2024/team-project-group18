@@ -69,29 +69,7 @@ public class DisplayRecipe extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             // Restore state from savedInstanceState
-            recipeNameTextView.setText(savedInstanceState.getString("recipeName"));
-            recipeCreatorTextView.setText(savedInstanceState.getString("creatorName"));
-            recipeDescriptionTextView.setText(savedInstanceState.getString("Description"));
-            recipeCookingTimeTextView.setText(savedInstanceState.getString("cookTime"));
-            recipeIngredientsTextView.setText(savedInstanceState.getString("ingredient"));
-            recipeDirectionsTextView.setText(savedInstanceState.getString("direction"));
-            recipeTagsTextView.setText(savedInstanceState.getString("tags"));
-            String[] imgUrlsArray = savedInstanceState.getStringArray("imgUrlsArray");
-            if (imgUrlsArray != null) {
-                imgUrls = Arrays.asList(imgUrlsArray);
-                currentImagePosition = savedInstanceState.getInt("currentImagePosition");
-                RecipeImageAdapter adapter = new RecipeImageAdapter(imgUrls);
-                recipeImagesView.setAdapter(adapter);
-                recipeImagesView.setVisibility(View.VISIBLE);
-
-                new TabLayoutMediator(tabLayout, recipeImagesView,
-                        (tab, position) -> {
-                            currentImagePosition = position;
-                        }).attach();
-            } else {
-                recipeImagesView.setVisibility(View.GONE);
-            }
-
+            restore(savedInstanceState);
         } else {
             // Fetch and display the first recipe from the database
             String recipeId = getIntent().getStringExtra("recipeId");
@@ -101,7 +79,6 @@ public class DisplayRecipe extends AppCompatActivity {
                 fetchRandomRecipe();
             }
         }
-
 
         Button addFriendButton = findViewById(R.id.addFriendButton);
         addFriendButton.setOnClickListener(new View.OnClickListener() {
@@ -268,6 +245,31 @@ public class DisplayRecipe extends AppCompatActivity {
             outState.putInt("currentImagePosition", -1);
         }
 
+    }
+
+    private void restore(Bundle inState){
+        recipeNameTextView.setText(inState.getString("recipeName"));
+        recipeCreatorTextView.setText(inState.getString("creatorName"));
+        recipeDescriptionTextView.setText(inState.getString("Description"));
+        recipeCookingTimeTextView.setText(inState.getString("cookTime"));
+        recipeIngredientsTextView.setText(inState.getString("ingredient"));
+        recipeDirectionsTextView.setText(inState.getString("direction"));
+        recipeTagsTextView.setText(inState.getString("tags"));
+        String[] imgUrlsArray = inState.getStringArray("imgUrlsArray");
+        if (imgUrlsArray != null) {
+            imgUrls = Arrays.asList(imgUrlsArray);
+            currentImagePosition = inState.getInt("currentImagePosition");
+            RecipeImageAdapter adapter = new RecipeImageAdapter(imgUrls);
+            recipeImagesView.setAdapter(adapter);
+            recipeImagesView.setVisibility(View.VISIBLE);
+
+            new TabLayoutMediator(tabLayout, recipeImagesView,
+                    (tab, position) -> {
+                        currentImagePosition = position;
+                    }).attach();
+        } else {
+            recipeImagesView.setVisibility(View.GONE);
+        }
     }
 
 }

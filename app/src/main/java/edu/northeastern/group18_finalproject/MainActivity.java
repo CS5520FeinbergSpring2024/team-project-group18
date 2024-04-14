@@ -56,12 +56,7 @@ public class MainActivity extends AppCompatActivity {
         MaterialButton signupButton = findViewById(R.id.signupButton);
 
 //         Notify user to open notification
-        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivity(intent);
-        }
+        openNotification();
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finishAffinity();
+    }
+    private void openNotification(){
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivity(intent);
+        }
     }
     private void loginUser() {
         final String username = usernameEditText.getText().toString().trim();
