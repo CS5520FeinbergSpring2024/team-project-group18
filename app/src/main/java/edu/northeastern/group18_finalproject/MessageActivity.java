@@ -60,25 +60,7 @@ public class MessageActivity extends AppCompatActivity {
 
         messagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("message").child(friendUsername);
         friendMessagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(friendUsername).child("message").child(currentUsername);
-        // get Counter for received message
-//        senderInfoRef = FirebaseDatabase.getInstance().getReference().child("users").child(friendUsername).child("receiveMessageInfoMap");
-//        senderInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()) {
-//                    // Check whether counter exist. If so, get it and increase value
-//                    Map<String, Object> receiveMessageInfoMap = (Map<String, Object>) dataSnapshot.getValue();
-//                    if (receiveMessageInfoMap != null && receiveMessageInfoMap.containsKey("counter") && receiveMessageInfoMap.containsKey("sender")) {
-//                        counter = (Long) receiveMessageInfoMap.get("counter");
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//            }
-//        });
-
+        getCounter();
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,11 +75,6 @@ public class MessageActivity extends AppCompatActivity {
                 String sender = dataSnapshot.child("sender").getValue(String.class);
                 messageTextview.setText(message);
                 senderTextView.setText(sender);
-//                counter++;
-//                Map<String, Object> receiveMessageInfoMap = new HashMap<>();
-//                receiveMessageInfoMap.put("counter", counter);
-//                receiveMessageInfoMap.put("sender", currentUsername);
-//                senderInfoRef.setValue(receiveMessageInfoMap);
 
             }
 
@@ -106,6 +83,27 @@ public class MessageActivity extends AppCompatActivity {
 
             }
 
+        });
+    }
+
+    private void getCounter(){
+        // get Counter for received message person
+        senderInfoRef = FirebaseDatabase.getInstance().getReference().child("users").child(friendUsername).child("receiveMessageInfoMap");
+        senderInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Check whether counter exist. If so, get it and increase value
+                    Map<String, Object> receiveMessageInfoMap = (Map<String, Object>) dataSnapshot.getValue();
+                    if (receiveMessageInfoMap != null && receiveMessageInfoMap.containsKey("counter") && receiveMessageInfoMap.containsKey("sender")) {
+                        counter = (Long) receiveMessageInfoMap.get("counter");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
     }
 
@@ -122,6 +120,14 @@ public class MessageActivity extends AppCompatActivity {
             messageTextview.setText(messageText);
 
             messageEditText.setText("");
+
+
+            // Update Counter
+            counter++;
+            Map<String, Object> receiveMessageInfoMap = new HashMap<>();
+            receiveMessageInfoMap.put("counter", counter);
+            receiveMessageInfoMap.put("sender", currentUsername);
+            senderInfoRef.setValue(receiveMessageInfoMap);
         }
     }
 }

@@ -56,13 +56,13 @@ public class MainActivity extends AppCompatActivity {
         MaterialButton signupButton = findViewById(R.id.signupButton);
         loginButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.iconBlue)));
         signupButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.iconBlue)));
-        // Notify user to open notification
-//        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
-//            Intent intent = new Intent();
-//            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-//            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-//            startActivity(intent);
-//        }
+//         Notify user to open notification
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+            startActivity(intent);
+        }
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     UserSession.setUsername(username);
-//                    userMessagesRef = usersRef.child(username).child("receiveMessageInfoMap");
-//                    addmessageListener();
+                    userMessagesRef = usersRef.child(username).child("receiveMessageInfoMap");
+                    addmessageListener();
                     Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, ShakeActivity.class); /*DisplayRecipe ShakeActivity*/
                     startActivity(intent);
@@ -123,38 +123,12 @@ public class MainActivity extends AppCompatActivity {
                     if (!initialized) {
                         oldCounter = dataSnapshot.child("counter").getValue(Long.class);
                         initialized = true;
-                    }
-                    if (!oldCounter.equals(dataSnapshot.child("counter").getValue(Long.class))) {
+                    } else if (!oldCounter.equals(dataSnapshot.child("counter").getValue(Long.class))) {
                         Log.d("newly", "added!!!");
                     /*
                     Mengyuan & Yushi: send notification if new element added
                      */
-                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_MUTABLE);
-
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
-                                .setSmallIcon(R.mipmap.shake)
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.shake))
-                                .setContentTitle("New Message Received!")
-                                .setContentText("You received a new message from a friend" + dataSnapshot.child("sender").getValue(String.class))
-                                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                .setContentIntent(pendingIntent)
-                                .setAutoCancel(true);
-                        long currentTimeMillis = System.currentTimeMillis();
-                        int notificationId = (int) currentTimeMillis & Integer.MAX_VALUE;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            CharSequence name = "My Channel";
-                            String description = "This is my channel";
-                            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-                            channel.setDescription(description);
-                            // Register the channel with the system
-                            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-                            notificationManager.createNotificationChannel(channel);
-
-                            notificationManager.notify(notificationId, builder.build());
-                        }
+                        registerNotification(dataSnapshot);
                     }
                 } else {
                     Map<String, Object> receiveMessageInfoMap = new HashMap<>();
@@ -184,6 +158,34 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void registerNotification(DataSnapshot dataSnapshot) {
+        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_MUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.shake)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.shake))
+                .setContentTitle("New Message Received!")
+                .setContentText("You received a new message from a friend" + dataSnapshot.child("sender").getValue(String.class))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        long currentTimeMillis = System.currentTimeMillis();
+        int notificationId = (int) currentTimeMillis & Integer.MAX_VALUE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "My Channel";
+            String description = "This is my channel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+
+            notificationManager.notify(notificationId, builder.build());
+        }
+    }
     private void signupUser() {
         final String username = usernameEditText.getText().toString().trim();
 
