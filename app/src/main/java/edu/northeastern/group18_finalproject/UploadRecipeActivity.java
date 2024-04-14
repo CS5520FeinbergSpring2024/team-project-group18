@@ -370,6 +370,11 @@ public class UploadRecipeActivity extends AppCompatActivity {
                     isValid = false;
                 }
 
+                if (photoUris == null || photoUris.isEmpty()) {
+                    Toast.makeText(UploadRecipeActivity.this, "Please upload at least one photo for the recipe.", Toast.LENGTH_LONG).show();
+                    isValid = false;
+                }
+
                 if (!isValid) {
                     Toast.makeText(UploadRecipeActivity.this, "Please fill out all required fields.", Toast.LENGTH_SHORT).show();
                     return;
