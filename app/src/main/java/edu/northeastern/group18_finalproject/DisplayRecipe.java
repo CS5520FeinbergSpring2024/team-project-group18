@@ -79,17 +79,19 @@ public class DisplayRecipe extends AppCompatActivity {
             String[] imgUrlsArray = savedInstanceState.getStringArray("imgUrlsArray");
             if (imgUrlsArray != null) {
                 imgUrls = Arrays.asList(imgUrlsArray);
+                currentImagePosition = savedInstanceState.getInt("currentImagePosition");
+                RecipeImageAdapter adapter = new RecipeImageAdapter(imgUrls);
+                recipeImagesView.setAdapter(adapter);
+                recipeImagesView.setVisibility(View.VISIBLE);
+
+                new TabLayoutMediator(tabLayout, recipeImagesView,
+                        (tab, position) -> {
+                            currentImagePosition = position;
+                        }).attach();
+            } else {
+                recipeImagesView.setVisibility(View.GONE);
             }
-            currentImagePosition = savedInstanceState.getInt("currentImagePosition");
 
-            RecipeImageAdapter adapter = new RecipeImageAdapter(imgUrls);
-            recipeImagesView.setAdapter(adapter);
-            recipeImagesView.setVisibility(View.VISIBLE);
-
-            new TabLayoutMediator(tabLayout, recipeImagesView,
-                    (tab, position) -> {
-                        currentImagePosition = position;
-                    }).attach();
         } else {
             // Fetch and display the first recipe from the database
             String recipeId = getIntent().getStringExtra("recipeId");
@@ -260,11 +262,12 @@ public class DisplayRecipe extends AppCompatActivity {
             String[] imgUrlsArray = new String[imgUrls.size()];
             imgUrlsArray = imgUrls.toArray(imgUrlsArray);
             outState.putStringArray("imgUrlsArray", imgUrlsArray);
+            outState.putInt("currentImagePosition", currentImagePosition);
         } else {
             outState.putStringArray("imgUrlsArray", null);
+            outState.putInt("currentImagePosition", -1);
         }
 
-        outState.putInt("currentImagePosition", currentImagePosition);
     }
 
 }

@@ -63,6 +63,7 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:iconTint="@color/iconBlue"
+        app:backgroundTint="@color/iconBlue"
         app:layout_constraintBottom_toTopOf="@id/signupButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,6 +81,7 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         app:iconTint="@color/iconBlue"
+        app:backgroundTint="@color/iconBlue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginButton" />

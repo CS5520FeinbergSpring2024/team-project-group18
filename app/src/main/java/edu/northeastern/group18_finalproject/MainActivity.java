@@ -54,8 +54,7 @@ public class MainActivity extends AppCompatActivity {
         usernameEditText = findViewById(R.id.usernameText);
         MaterialButton loginButton = findViewById(R.id.loginButton);
         MaterialButton signupButton = findViewById(R.id.signupButton);
-        loginButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.iconBlue)));
-        signupButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.iconBlue)));
+
 //         Notify user to open notification
         if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
             Intent intent = new Intent();
