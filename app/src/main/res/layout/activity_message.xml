@@ -10,8 +10,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:textColor="#601BDC"
-        android:textSize="25sp"
+        android:textSize="30sp"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/senderPromptTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:text="Sender"
+        app:layout_constraintTop_toBottomOf="@id/messageTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -21,10 +33,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textColor="@android:color/black"
-        android:textSize="30sp"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/messageTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/senderPromptTextView"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
         android:id="@+id/sendMessageLayout"
