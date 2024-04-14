@@ -6,13 +6,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
@@ -39,7 +39,6 @@ public class DisplayRecipe extends AppCompatActivity {
     private ViewPager2 recipeImagesView;
     private TabLayout tabLayout;
 
-//    private RecyclerView recipeImagesRecyclerView;
     private DatabaseReference recipesRef;
 
     private DatabaseReference usersRef;
@@ -173,12 +172,16 @@ public class DisplayRecipe extends AppCompatActivity {
 
     private void populateUIWithRecipe(Recipe recipe) {
         recipeNameTextView.setText(recipe.getName());
-        recipeCreatorTextView.setText(recipe.getCreator());
         recipeDescriptionTextView.setText(recipe.getDescription());
         recipeCookingTimeTextView.setText(recipe.getCookingTime());
         recipeIngredientsTextView.setText(recipe.getIngredients());
         recipeDescriptionTextView.setText(recipe.getDescription());
-        recipeTagsTextView.setText(TextUtils.join(", ", recipe.getTags()));
+
+        if (recipe.getCreator() == null || recipe.getCreator().isEmpty()) {
+            recipeCreatorTextView.setText("Anonymous");
+        } else {
+            recipeCreatorTextView.setText(recipe.getCreator());
+        }
 
 
         if (recipe.getImageUrl() != null && !recipe.getImageUrl().isEmpty()) {
@@ -194,6 +197,12 @@ public class DisplayRecipe extends AppCompatActivity {
 
         } else {
             recipeImagesView.setVisibility(View.GONE);
+        }
+
+        if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
+            recipeTagsTextView.setText(TextUtils.join(", ", recipe.getTags()));
+        } else{
+            recipeTagsTextView.setVisibility(View.GONE);
         }
 
     }
@@ -259,3 +268,28 @@ public class DisplayRecipe extends AppCompatActivity {
     }
 
 }
+
+//    private void setupShareButton(){
+//        ImageButton shareRecipeButton = findViewById(R.id.shareRecipeButton);
+//        shareRecipeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (currentRecipe != null && currentRecipe.getRecipeId() != null) {
+//                    shareRecipe(currentRecipe.getRecipeId());
+//                } else {
+//                    Toast.makeText(DisplayRecipe.this, "No recipe loaded to share.", Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
+//    }
+//
+//    public void shareRecipe(String recipeId) {
+//
+//        String url = "https://www.shakerecipe.com/recipe?id=" + recipeId;
+//
+//        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+//        shareIntent.setType("text/plain");
+//        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this recipe! " + url);
+//        startActivity(Intent.createChooser(shareIntent, "Share Recipe via"));
+//    }
+

@@ -336,6 +336,11 @@ public class UploadRecipeActivity extends AppCompatActivity {
                 String directionList = directions.getText().toString().trim();
                 String creator = UserSession.getUsername();
 
+                if (creator == null || creator.isEmpty()) {
+                    Toast.makeText(UploadRecipeActivity.this, "Please login to post a recipe.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 List<String> tagStrings = new ArrayList<>();
                 for (int i = 0; i < chipGroupTags.getChildCount(); i++){
                     Chip chip = (Chip) chipGroupTags.getChildAt(i);
