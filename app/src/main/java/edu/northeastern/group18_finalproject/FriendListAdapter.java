@@ -79,7 +79,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Fr
 }
 
         public void bind(String username) {
-            friendNameTextView.setText("Friend: " + username);
+            friendNameTextView.setText(username);
         }
     }
 }

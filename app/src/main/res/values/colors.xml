@@ -18,4 +18,8 @@
     <color name="button_stroke_color">#FF3700B3</color>
     <color name="button_ripple_color">#A79EB5</color>
 
+
+    <color name="friendlistColor">#E2DBCFF1</color>
+    <color name="outlineColor">#FFD9E0</color>
+
 </resources>
