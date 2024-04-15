@@ -77,18 +77,40 @@
         app:layout_constraintStart_toEndOf="@id/creatorIconImageView"
         app:layout_constraintEnd_toStartOf="@id/recipeTagsTextView"
         app:layout_constraintTop_toBottomOf="@id/appIcon"
-        app:layout_constraintBottom_toTopOf="@id/recipeImagesView"/>
+        app:layout_constraintBottom_toTopOf="@id/cardViewPager"/>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/recipeImagesView"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginStart="16dp"
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardViewPager"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:layout_marginEnd="16dp"
+        android:layout_margin="10dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/button_ripple_color"
+        app:strokeColor="@color/button_ripple_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipeCreatorTextView" />
+        app:layout_constraintTop_toBottomOf="@id/recipeCreatorTextView">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/recipeImagesView"
+            android:layout_width="match_parent"
+            android:layout_height="250dp" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+<!--    <androidx.viewpager2.widget.ViewPager2-->
+<!--        android:id="@+id/recipeImagesView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="250dp"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginTop="25dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/recipeCreatorTextView" />-->
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/viewPagerIndicator"
@@ -98,9 +120,9 @@
         android:background="@color/backgroundPink"
         app:tabIndicatorHeight="0dp"
         app:tabBackground="@drawable/tab_selector"
-        app:layout_constraintTop_toBottomOf="@id/recipeImagesView"
-        app:layout_constraintStart_toStartOf="@id/recipeImagesView"
-        app:layout_constraintEnd_toEndOf="@id/recipeImagesView" />
+        app:layout_constraintTop_toBottomOf="@id/cardViewPager"
+        app:layout_constraintStart_toStartOf="@id/cardViewPager"
+        app:layout_constraintEnd_toEndOf="@id/cardViewPager" />
 
     <TextView
         android:id="@+id/recipeNameTextView"
