@@ -13,17 +13,20 @@
     android:layout_height="match_parent"
     tools:context=".UploadRecipeActivity">
 
-    <Button
-        android:id="@+id/postRecipeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Post"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/photoGridLayout"
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/postRecipeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Post"
+        android:textColor="@color/white"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/photoGridLayout"
+        app:backgroundTint="@color/postColor"
         />
+
 
     <GridLayout
         android:id="@+id/photoGridLayout"
@@ -39,11 +42,14 @@
         android:padding="4dp">
     </GridLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/addPhotoButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="add photos"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_add_photo"
         android:layout_margin="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -160,11 +166,10 @@
         android:id="@+id/chipGroupTags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="80dp"
         app:layout_constraintEnd_toStartOf="@id/addTagButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tagsTitleText"
         app:singleSelection="false"
         app:chipSpacing="10dp">

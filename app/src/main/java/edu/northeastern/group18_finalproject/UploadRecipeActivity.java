@@ -5,9 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
@@ -56,7 +59,9 @@ public class UploadRecipeActivity extends AppCompatActivity {
     private ChipGroup chipGroupTags;
     private ImageButton addTagButton, deletePhotoButton;
 
-    private Button addPhotoButton, postRecipeButton;
+    private ImageButton addPhotoButton;
+
+    private MaterialButton postRecipeButton;
 
     private ImageView photoImageView;
 
@@ -278,10 +283,9 @@ public class UploadRecipeActivity extends AppCompatActivity {
     }
 
     private void addTagToGroup(String tagText, boolean isChecked){
-        Chip chip = new Chip(this);
+        Chip chip = new Chip(this, null, R.attr.customChipStyle);
         chip.setId(View.generateViewId());
         chip.setText(tagText);
-        chip.setBackgroundColor(R.color.purple);
         chip.setClickable(true);
         chip.setCheckable(true);
         chip.setChecked(isChecked);
@@ -443,6 +447,27 @@ public class UploadRecipeActivity extends AppCompatActivity {
                         Toast.makeText(UploadRecipeActivity.this, "Failed to upload recipe", Toast.LENGTH_SHORT).show();
                     });
         }
+    }
+
+    @Override
+    @SuppressLint("MissingSuperCall")
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Exit")
+                .setMessage("Are you sure you want to exit? Any inputted data will be lost.")
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        UploadRecipeActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 
 
