@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class DisplayRecipe extends AppCompatActivity {
     private TextView recipeNameTextView;
@@ -94,6 +95,7 @@ public class DisplayRecipe extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addFriend(recipeCreatorTextView.getText().toString());
+                addFriendButton.setBackgroundColor(getResources().getColor(R.color.button_ripple_color));
             }
         });
     }
@@ -190,7 +192,10 @@ public class DisplayRecipe extends AppCompatActivity {
         }
 
         if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
-            recipeTagsTextView.setText(TextUtils.join(", ", recipe.getTags()));
+            String tagsWithHash = recipe.getTags().stream()
+                    .map(tag -> "#" + tag) // Add "#" to each tag
+                    .collect(Collectors.joining(", ")); // Join them with a comma
+            recipeTagsTextView.setText(tagsWithHash);
         } else{
             recipeTagsTextView.setVisibility(View.GONE);
         }
