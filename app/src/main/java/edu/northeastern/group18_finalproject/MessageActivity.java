@@ -69,7 +69,7 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
         
-        messagesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        messagesRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String message = dataSnapshot.child("currentMessage").getValue(String.class);
@@ -86,12 +86,14 @@ public class MessageActivity extends AppCompatActivity {
                         startActivity(displayIntent);
                     });
                     }
+                } else {
+                    messageTextview.setOnClickListener(null);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e("MessageActivity", "Error reading message data: " + error.toException());
             }
 
         });
@@ -131,7 +133,6 @@ public class MessageActivity extends AppCompatActivity {
     private void sendMessage() {
         String messageText = messageEditText.getText().toString().trim();
         if (!TextUtils.isEmpty(messageText)) {
-//            Message message = new Message(currentUsername, friendUsername, messageText, System.currentTimeMillis());
 
             messagesRef.child("currentMessage").setValue(messageText);
             messagesRef.child("sender").setValue(currentUsername);
