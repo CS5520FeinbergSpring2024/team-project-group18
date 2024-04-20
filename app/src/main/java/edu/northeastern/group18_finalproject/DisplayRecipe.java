@@ -212,7 +212,18 @@ public class DisplayRecipe extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    if (!dataSnapshot.getChildren().iterator().hasNext() || !dataSnapshot.getChildren().iterator().next().getValue(String.class).equals(creatorUsername)) {
+                    Log.d("snapShopt exists", "yes!!!");
+                    boolean isAlreadyFriend = false;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String friendName = snapshot.getValue(String.class);
+                        if (friendName != null && friendName.equals(creatorUsername)) {
+                            isAlreadyFriend = true;
+                            break;
+                        }
+                    }
+
+                    if (!isAlreadyFriend) {
+                        Log.d("friend exists", "no!!!");
                         // If not already friends, add the creator as a friend
                         currentUserFriendsRef.push().setValue(creatorUsername);
                         creatorUserFriendsRef.push().setValue(currentUsername);
@@ -220,6 +231,7 @@ public class DisplayRecipe extends AppCompatActivity {
                     } else {
                         Toast.makeText(DisplayRecipe.this, "You are already friends with the recipe creator", Toast.LENGTH_SHORT).show();
                     }
+
                 } else {
                     currentUserFriendsRef.push().setValue(creatorUsername);
                     creatorUserFriendsRef.push().setValue(currentUsername);
