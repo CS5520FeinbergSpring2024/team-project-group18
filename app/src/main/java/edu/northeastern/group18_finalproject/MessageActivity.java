@@ -62,17 +62,7 @@ public class MessageActivity extends AppCompatActivity {
 
         messagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("message").child(friendUsername);
         messagesInfoRef = messagesRef.child("currentMessage");
-        messagesInfoRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                messageTextview.setText(messagesInfoRef.toString());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        textViewSync();
         friendMessagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(friendUsername).child("message").child(currentUsername);
         getCounter();
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +109,20 @@ public class MessageActivity extends AppCompatActivity {
             return message.substring(startIndex + prefix.length()).trim();
         }
         return null;
+    }
+
+    private void textViewSync(){
+        messagesInfoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messageTextview.setText(messagesInfoRef.toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
