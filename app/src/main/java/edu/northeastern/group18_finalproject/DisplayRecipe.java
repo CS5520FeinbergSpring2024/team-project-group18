@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.android.material.textview.MaterialTextView;
@@ -48,6 +49,7 @@ public class DisplayRecipe extends AppCompatActivity {
     private Recipe currentRecipe;
     private ImageButton likeRecipeButton;
     private TextView likeCountTextView;
+    private MaterialButton addFriendButton;
 
 //    private User currentUser;
 //    private User recipeCreator;
@@ -75,9 +77,11 @@ public class DisplayRecipe extends AppCompatActivity {
         likeRecipeButton = findViewById(R.id.likeRecipeButton);
         likeCountTextView = findViewById(R.id.likeCountTextView);
 
+        addFriendButton = findViewById(R.id.addFriendButton);
+
         if (savedInstanceState != null) {
             // Restore state from savedInstanceState
-            restore(savedInstanceState);
+//            restore(savedInstanceState);
 
             String recipeId = savedInstanceState.getString("recipeId");
             if (recipeId != null) {
@@ -85,7 +89,6 @@ public class DisplayRecipe extends AppCompatActivity {
             }
 
         } else {
-            // Fetch and display the first recipe from the database
             String recipeId = getIntent().getStringExtra("recipeId");
             if (recipeId != null) {
                 fetchRecipeById(recipeId);
@@ -94,7 +97,6 @@ public class DisplayRecipe extends AppCompatActivity {
             }
         }
 
-        Button addFriendButton = findViewById(R.id.addFriendButton);
         addFriendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,20 +215,22 @@ public class DisplayRecipe extends AppCompatActivity {
 
         updateLikeButtonState(recipe);
         setupLikeEventListener(recipe);
-//        setupLikeCountListener(recipe);
+        setupLikeCountListener(recipe);
+        setupFriendButtonUI(recipe.getCreator());
         setupShareButton();
 
     }
 
-    private void addFriend(String creatorUsername) {
+    private void setupFriendButtonUI(String creatorUsername) {
         String currentUsername = UserSession.getUsername();
-        DatabaseReference currentUserFriendsRef = usersRef.child(currentUsername).child("friends");
-        DatabaseReference creatorUserFriendsRef = usersRef.child(creatorUsername).child("friends");
-        currentUserFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    Log.d("snapShopt exists", "yes!!!");
+        if (currentUsername.equals(creatorUsername)) {
+            addFriendButton.setVisibility(View.GONE);
+
+        } else {
+            DatabaseReference currentUserFriendsRef = usersRef.child(currentUsername).child("friends");
+            currentUserFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     boolean isAlreadyFriend = false;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         String friendName = snapshot.getValue(String.class);
@@ -235,36 +239,52 @@ public class DisplayRecipe extends AppCompatActivity {
                             break;
                         }
                     }
-
-                    if (!isAlreadyFriend) {
-                        Log.d("friend exists", "no!!!");
-                        // If not already friends, add the creator as a friend
-                        currentUserFriendsRef.push().setValue(creatorUsername);
-                        creatorUserFriendsRef.push().setValue(currentUsername);
-                        updateFriendButtonUI();
+                    if (isAlreadyFriend) {
+                        addFriendButton.setText("Connected");
+                        addFriendButton.setEnabled(false);
+                        addFriendButton.setBackgroundColor(getResources().getColor(R.color.button_ripple_color));
                     } else {
-                        Toast.makeText(DisplayRecipe.this, "You are already friends with the recipe creator", Toast.LENGTH_SHORT).show();
+                        addFriendButton.setText("Add Friend");
+                        addFriendButton.setEnabled(true);
                     }
-
-                } else {
-                    currentUserFriendsRef.push().setValue(creatorUsername);
-                    creatorUserFriendsRef.push().setValue(currentUsername);
-                    updateFriendButtonUI();
                 }
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("DisplayRecipe", "Error checking friends list");
+                }
+            });
+        }
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("Firebase", "Error checking friends list: " + databaseError.getMessage());
+
+    private void addFriend(String creatorUsername) {
+        String currentUsername = UserSession.getUsername();
+        DatabaseReference currentUserFriendsRef = usersRef.child(currentUsername).child("friends");
+        DatabaseReference creatorUserFriendsRef = usersRef.child(creatorUsername).child("friends");
+
+        currentUserFriendsRef.push().setValue(creatorUsername).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                creatorUserFriendsRef.push().setValue(currentUsername).addOnCompleteListener(task2 -> {
+                    if (task2.isSuccessful()) {
+                        updateFriendButtonUI();
+                        Toast.makeText(DisplayRecipe.this, "Friend added successfully!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.d("AddFriendError", "2nd Task Failed: " + task2.getException().getMessage());
+                    }
+                });
+            } else {
+                Log.d("AddFriendError", "1st Task Failed: " + task.getException().getMessage());
             }
         });
+//        currentUserFriendsRef.push().setValue(creatorUsername);
+//        creatorUserFriendsRef.push().setValue(currentUsername);
+//        updateFriendButtonUI();
     }
 
     private void updateFriendButtonUI() {
-        // Update the UI to reflect the new friend
         Button addFriendButton = findViewById(R.id.addFriendButton);
-        addFriendButton.setText("Friend Added");
-        addFriendButton.setEnabled(false); // Disable the button after the user has added the friend
+        addFriendButton.setText("Connected");
+        addFriendButton.setEnabled(false);
     }
 
     private void setupShareButton(){
@@ -403,24 +423,24 @@ public class DisplayRecipe extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        outState.putString("recipeName", recipeNameTextView.getText().toString());
-        outState.putString("creatorName", recipeCreatorTextView.getText().toString());
-        outState.putString("Description", recipeDescriptionTextView.getText().toString());
-        outState.putString("cookTime", recipeCookingTimeTextView.getText().toString());
-        outState.putString("ingredient", recipeIngredientsTextView.getText().toString());
-        outState.putString("direction", recipeDirectionsTextView.getText().toString());
-        outState.putString("tags", recipeTagsTextView.getText().toString());
-
-        if (imgUrls != null) {
-            String[] imgUrlsArray = new String[imgUrls.size()];
-            imgUrlsArray = imgUrls.toArray(imgUrlsArray);
-            outState.putStringArray("imgUrlsArray", imgUrlsArray);
-            outState.putInt("currentImagePosition", currentImagePosition);
-        } else {
-            outState.putStringArray("imgUrlsArray", null);
-            outState.putInt("currentImagePosition", -1);
-        }
+//
+//        outState.putString("recipeName", recipeNameTextView.getText().toString());
+//        outState.putString("creatorName", recipeCreatorTextView.getText().toString());
+//        outState.putString("Description", recipeDescriptionTextView.getText().toString());
+//        outState.putString("cookTime", recipeCookingTimeTextView.getText().toString());
+//        outState.putString("ingredient", recipeIngredientsTextView.getText().toString());
+//        outState.putString("direction", recipeDirectionsTextView.getText().toString());
+//        outState.putString("tags", recipeTagsTextView.getText().toString());
+//
+//        if (imgUrls != null) {
+//            String[] imgUrlsArray = new String[imgUrls.size()];
+//            imgUrlsArray = imgUrls.toArray(imgUrlsArray);
+//            outState.putStringArray("imgUrlsArray", imgUrlsArray);
+//            outState.putInt("currentImagePosition", currentImagePosition);
+//        } else {
+//            outState.putStringArray("imgUrlsArray", null);
+//            outState.putInt("currentImagePosition", -1);
+//        }
 
         if (currentRecipe != null) {
             outState.putString("recipeId", currentRecipe.getRecipeId());
@@ -428,29 +448,29 @@ public class DisplayRecipe extends AppCompatActivity {
 
     }
 
-    private void restore(Bundle inState){
-        recipeNameTextView.setText(inState.getString("recipeName"));
-        recipeCreatorTextView.setText(inState.getString("creatorName"));
-        recipeDescriptionTextView.setText(inState.getString("Description"));
-        recipeCookingTimeTextView.setText(inState.getString("cookTime"));
-        recipeIngredientsTextView.setText(inState.getString("ingredient"));
-        recipeDirectionsTextView.setText(inState.getString("direction"));
-        recipeTagsTextView.setText(inState.getString("tags"));
-        String[] imgUrlsArray = inState.getStringArray("imgUrlsArray");
-        if (imgUrlsArray != null) {
-            imgUrls = Arrays.asList(imgUrlsArray);
-            currentImagePosition = inState.getInt("currentImagePosition");
-            RecipeImageAdapter adapter = new RecipeImageAdapter(imgUrls);
-            recipeImagesView.setAdapter(adapter);
-            recipeImagesView.setVisibility(View.VISIBLE);
-
-            new TabLayoutMediator(tabLayout, recipeImagesView,
-                    (tab, position) -> {
-                        currentImagePosition = position;
-                    }).attach();
-        } else {
-            recipeImagesView.setVisibility(View.GONE);
-        }
-    }
+//    private void restore(Bundle inState){
+//        recipeNameTextView.setText(inState.getString("recipeName"));
+//        recipeCreatorTextView.setText(inState.getString("creatorName"));
+//        recipeDescriptionTextView.setText(inState.getString("Description"));
+//        recipeCookingTimeTextView.setText(inState.getString("cookTime"));
+//        recipeIngredientsTextView.setText(inState.getString("ingredient"));
+//        recipeDirectionsTextView.setText(inState.getString("direction"));
+//        recipeTagsTextView.setText(inState.getString("tags"));
+//        String[] imgUrlsArray = inState.getStringArray("imgUrlsArray");
+//        if (imgUrlsArray != null) {
+//            imgUrls = Arrays.asList(imgUrlsArray);
+//            currentImagePosition = inState.getInt("currentImagePosition");
+//            RecipeImageAdapter adapter = new RecipeImageAdapter(imgUrls);
+//            recipeImagesView.setAdapter(adapter);
+//            recipeImagesView.setVisibility(View.VISIBLE);
+//
+//            new TabLayoutMediator(tabLayout, recipeImagesView,
+//                    (tab, position) -> {
+//                        currentImagePosition = position;
+//                    }).attach();
+//        } else {
+//            recipeImagesView.setVisibility(View.GONE);
+//        }
+//    }
 }
 
