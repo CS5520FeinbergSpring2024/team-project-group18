@@ -253,14 +253,25 @@
         android:layout_height="40dp"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="25dp"
-        android:layout_marginEnd="10dp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_likebutton"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/shareRecipeButton"
+        app:layout_constraintEnd_toStartOf="@+id/likeCountTextView"
         app:layout_constraintTop_toBottomOf="@id/recipeDirectionsTextView" />
 
+    <TextView
+        android:id="@+id/likeCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="000"
+        android:textSize="16sp"
+        android:textColor="@color/textColor"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="@id/likeRecipeButton"
+        app:layout_constraintEnd_toStartOf="@+id/shareRecipeButton"
+        app:layout_constraintTop_toTopOf="@id/likeRecipeButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

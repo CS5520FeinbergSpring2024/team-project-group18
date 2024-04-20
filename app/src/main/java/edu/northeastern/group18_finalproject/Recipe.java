@@ -1,6 +1,8 @@
 package edu.northeastern.group18_finalproject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Recipe {
     private String recipeId;
@@ -10,6 +12,10 @@ public class Recipe {
     private String cookingTime;
     private String ingredients;
     private String directions;
+
+    private int likes;
+
+    private Map<String, Boolean> likedBy = new HashMap<>();
 
     private List<String> tags;
     private List<String> imageUrl;
@@ -30,6 +36,8 @@ public class Recipe {
         this.directions = directions;
         this.tags = tags;
         this.imageUrl = imageUrl;
+        this.likes = 0;
+        this.likedBy = new HashMap<>();
     }
 
     // Getters and setters
@@ -92,6 +100,22 @@ public class Recipe {
 
     public void setImageUrl(List<String> imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public Map<String, Boolean> getLikedBy() {
+        return likedBy;
+    }
+
+    public void setLikedBy(Map<String, Boolean> likedBy) {
+        this.likedBy = likedBy;
     }
 }
 

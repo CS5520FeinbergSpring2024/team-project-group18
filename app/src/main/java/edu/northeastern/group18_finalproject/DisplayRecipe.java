@@ -2,7 +2,7 @@ package edu.northeastern.group18_finalproject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.viewpager2.widget.ViewPager2;
@@ -22,6 +23,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -36,17 +39,15 @@ public class DisplayRecipe extends AppCompatActivity {
     private TextView recipeDescriptionTextView;
     private TextView recipeTagsTextView;
     private TextView recipeCookingTimeTextView,recipeIngredientsTextView, recipeDirectionsTextView ;
-
     private ViewPager2 recipeImagesView;
     private TabLayout tabLayout;
-
     private DatabaseReference recipesRef;
-
     private DatabaseReference usersRef;
     private int currentImagePosition = 0;
     private List<String> imgUrls;
-
     private Recipe currentRecipe;
+    private ImageButton likeRecipeButton;
+    private TextView likeCountTextView;
 
 //    private User currentUser;
 //    private User recipeCreator;
@@ -70,6 +71,9 @@ public class DisplayRecipe extends AppCompatActivity {
 
         recipesRef = FirebaseDatabase.getInstance().getReference().child("recipes");
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+
+        likeRecipeButton = findViewById(R.id.likeRecipeButton);
+        likeCountTextView = findViewById(R.id.likeCountTextView);
 
         if (savedInstanceState != null) {
             // Restore state from savedInstanceState
@@ -96,6 +100,13 @@ public class DisplayRecipe extends AppCompatActivity {
             public void onClick(View v) {
                 addFriend(recipeCreatorTextView.getText().toString());
                 addFriendButton.setBackgroundColor(getResources().getColor(R.color.button_ripple_color));
+            }
+        });
+
+        likeRecipeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleLike(currentRecipe);
             }
         });
     }
@@ -200,6 +211,9 @@ public class DisplayRecipe extends AppCompatActivity {
             recipeTagsTextView.setVisibility(View.GONE);
         }
 
+        updateLikeButtonState(recipe);
+        setupLikeEventListener(recipe);
+//        setupLikeCountListener(recipe);
         setupShareButton();
 
     }
@@ -253,6 +267,139 @@ public class DisplayRecipe extends AppCompatActivity {
         addFriendButton.setEnabled(false); // Disable the button after the user has added the friend
     }
 
+    private void setupShareButton(){
+        ImageButton shareRecipeButton = findViewById(R.id.shareRecipeButton);
+        shareRecipeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentRecipe != null && currentRecipe.getRecipeId() != null) {
+                    shareRecipe(currentRecipe.getRecipeId());
+                } else {
+                    Toast.makeText(DisplayRecipe.this, "No recipe loaded to share.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void shareRecipe(String recipeId) {
+        String message = "recipeId=" + recipeId;
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this recipe!\n" + message);
+        startActivity(Intent.createChooser(shareIntent, "Share Recipe via"));
+    }
+
+    private void toggleLike(Recipe recipe){
+        DatabaseReference recipeRef = recipesRef.child(recipe.getRecipeId());
+        DatabaseReference userLikesRef = recipeRef.child("likedBy").child(UserSession.getUsername());
+        DatabaseReference likesRef = recipeRef.child("likes");
+
+        userLikesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Boolean liked = dataSnapshot.getValue(Boolean.class);
+                if (Boolean.TRUE.equals(liked)) {
+                    userLikesRef.removeValue();
+                    likesRef.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                            Integer currentLikes = currentData.getValue(Integer.class);
+                            if (currentLikes != null && currentLikes > 0) {
+                                currentData.setValue(currentLikes - 1);
+                            } else {
+                                currentData.setValue(0);
+                            }
+                            return Transaction.success(currentData);
+                        }
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                        }
+                    });
+                } else {
+                    userLikesRef.setValue(true);
+                    likesRef.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                            Integer currentLikes = currentData.getValue(Integer.class);
+                            if (currentLikes == null) {
+                                currentData.setValue(1);
+                            } else {
+                                currentData.setValue(currentLikes + 1);
+                            }
+                            return Transaction.success(currentData);
+                        }
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("DisplayRecipe", "Failed to read like status", databaseError.toException());
+            }
+        });
+
+//        Boolean liked = recipe.getLikedBy().get(UserSession.getUsername());
+//        if (liked != null && liked){
+//            recipeRef.child("likes").setValue(recipe.getLikes() - 1);
+//            userLikesRef.removeValue();
+//            likeRecipeButton.setImageResource(R.drawable.ic_likebutton);
+//
+//        } else {
+//            recipeRef.child("likes").setValue(recipe.getLikes() + 1);
+//            userLikesRef.setValue(true);
+//            likeRecipeButton.setImageResource(R.drawable.ic_filled_like_button);
+//        }
+    }
+
+    private void updateLikeButtonState(Recipe recipe) {
+        if (recipe.getLikedBy().containsKey(UserSession.getUsername()) && recipe.getLikedBy().get(UserSession.getUsername())) {
+            likeRecipeButton.setImageResource(R.drawable.ic_filled_like_button);;
+        } else {
+            likeRecipeButton.setImageResource(R.drawable.ic_likebutton);;
+        }
+        likeCountTextView.setText(String.valueOf(recipe.getLikes()));
+    }
+
+    private void setupLikeEventListener(Recipe recipe) {
+        DatabaseReference likeRef = recipesRef.child(recipe.getRecipeId()).child("likedBy");
+        likeRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Boolean liked = dataSnapshot.child(UserSession.getUsername()).getValue(Boolean.class);
+                likeRecipeButton.setImageResource(liked != null && liked ? R.drawable.ic_filled_like_button : R.drawable.ic_likebutton);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("DisplayRecipe", "Failed to listen for like changes", databaseError.toException());
+            }
+        });
+    }
+
+    private void setupLikeCountListener(Recipe recipe) {
+        DatabaseReference likesRef = recipesRef.child(recipe.getRecipeId()).child("likes");
+        likesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Integer likes = dataSnapshot.getValue(Integer.class);
+                if (likes != null) {
+                    likeCountTextView.setText(String.valueOf(likes));
+                } else {
+                    likeCountTextView.setText("0");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("DisplayRecipe", "Error fetching like count", databaseError.toException());
+            }
+        });
+    }
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -304,31 +451,6 @@ public class DisplayRecipe extends AppCompatActivity {
         } else {
             recipeImagesView.setVisibility(View.GONE);
         }
-    }
-
-
-    private void setupShareButton(){
-        ImageButton shareRecipeButton = findViewById(R.id.shareRecipeButton);
-        shareRecipeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (currentRecipe != null && currentRecipe.getRecipeId() != null) {
-                    shareRecipe(currentRecipe.getRecipeId());
-                } else {
-                    Toast.makeText(DisplayRecipe.this, "No recipe loaded to share.", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
-    public void shareRecipe(String recipeId) {
-
-        String message = "recipeId=" + recipeId;
-
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out this recipe!\n" + message);
-        startActivity(Intent.createChooser(shareIntent, "Share Recipe via"));
     }
 }
 
