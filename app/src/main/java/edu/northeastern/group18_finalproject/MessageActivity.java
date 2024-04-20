@@ -148,7 +148,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
-        String messageText = messageEditText.getText().toString().trim();
+        String messageText = messageEditText.getText().toString();
         if (!TextUtils.isEmpty(messageText)) {
 
             messagesRef.child("currentMessage").setValue(messageText);
