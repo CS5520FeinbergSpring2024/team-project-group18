@@ -80,9 +80,6 @@ public class DisplayRecipe extends AppCompatActivity {
         addFriendButton = findViewById(R.id.addFriendButton);
 
         if (savedInstanceState != null) {
-            // Restore state from savedInstanceState
-//            restore(savedInstanceState);
-
             String recipeId = savedInstanceState.getString("recipeId");
             if (recipeId != null) {
                 fetchRecipeById(recipeId);
@@ -225,8 +222,9 @@ public class DisplayRecipe extends AppCompatActivity {
         String currentUsername = UserSession.getUsername();
         if (currentUsername.equals(creatorUsername)) {
             addFriendButton.setVisibility(View.GONE);
-
         } else {
+            addFriendButton.setEnabled(false);
+
             DatabaseReference currentUserFriendsRef = usersRef.child(currentUsername).child("friends");
             currentUserFriendsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -241,7 +239,6 @@ public class DisplayRecipe extends AppCompatActivity {
                     }
                     if (isAlreadyFriend) {
                         addFriendButton.setText("Connected");
-                        addFriendButton.setEnabled(false);
                         addFriendButton.setBackgroundColor(getResources().getColor(R.color.button_ripple_color));
                     } else {
                         addFriendButton.setText("Add Friend");
@@ -266,7 +263,8 @@ public class DisplayRecipe extends AppCompatActivity {
             if (task.isSuccessful()) {
                 creatorUserFriendsRef.push().setValue(currentUsername).addOnCompleteListener(task2 -> {
                     if (task2.isSuccessful()) {
-                        updateFriendButtonUI();
+                        addFriendButton.setText("Connected");
+                        addFriendButton.setEnabled(false);
                         Toast.makeText(DisplayRecipe.this, "Friend added successfully!", Toast.LENGTH_SHORT).show();
                     } else {
                         Log.d("AddFriendError", "2nd Task Failed: " + task2.getException().getMessage());
@@ -276,15 +274,6 @@ public class DisplayRecipe extends AppCompatActivity {
                 Log.d("AddFriendError", "1st Task Failed: " + task.getException().getMessage());
             }
         });
-//        currentUserFriendsRef.push().setValue(creatorUsername);
-//        creatorUserFriendsRef.push().setValue(currentUsername);
-//        updateFriendButtonUI();
-    }
-
-    private void updateFriendButtonUI() {
-        Button addFriendButton = findViewById(R.id.addFriendButton);
-        addFriendButton.setText("Connected");
-        addFriendButton.setEnabled(false);
     }
 
     private void setupShareButton(){
@@ -423,54 +412,11 @@ public class DisplayRecipe extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//
-//        outState.putString("recipeName", recipeNameTextView.getText().toString());
-//        outState.putString("creatorName", recipeCreatorTextView.getText().toString());
-//        outState.putString("Description", recipeDescriptionTextView.getText().toString());
-//        outState.putString("cookTime", recipeCookingTimeTextView.getText().toString());
-//        outState.putString("ingredient", recipeIngredientsTextView.getText().toString());
-//        outState.putString("direction", recipeDirectionsTextView.getText().toString());
-//        outState.putString("tags", recipeTagsTextView.getText().toString());
-//
-//        if (imgUrls != null) {
-//            String[] imgUrlsArray = new String[imgUrls.size()];
-//            imgUrlsArray = imgUrls.toArray(imgUrlsArray);
-//            outState.putStringArray("imgUrlsArray", imgUrlsArray);
-//            outState.putInt("currentImagePosition", currentImagePosition);
-//        } else {
-//            outState.putStringArray("imgUrlsArray", null);
-//            outState.putInt("currentImagePosition", -1);
-//        }
 
         if (currentRecipe != null) {
             outState.putString("recipeId", currentRecipe.getRecipeId());
         }
 
     }
-
-//    private void restore(Bundle inState){
-//        recipeNameTextView.setText(inState.getString("recipeName"));
-//        recipeCreatorTextView.setText(inState.getString("creatorName"));
-//        recipeDescriptionTextView.setText(inState.getString("Description"));
-//        recipeCookingTimeTextView.setText(inState.getString("cookTime"));
-//        recipeIngredientsTextView.setText(inState.getString("ingredient"));
-//        recipeDirectionsTextView.setText(inState.getString("direction"));
-//        recipeTagsTextView.setText(inState.getString("tags"));
-//        String[] imgUrlsArray = inState.getStringArray("imgUrlsArray");
-//        if (imgUrlsArray != null) {
-//            imgUrls = Arrays.asList(imgUrlsArray);
-//            currentImagePosition = inState.getInt("currentImagePosition");
-//            RecipeImageAdapter adapter = new RecipeImageAdapter(imgUrls);
-//            recipeImagesView.setAdapter(adapter);
-//            recipeImagesView.setVisibility(View.VISIBLE);
-//
-//            new TabLayoutMediator(tabLayout, recipeImagesView,
-//                    (tab, position) -> {
-//                        currentImagePosition = position;
-//                    }).attach();
-//        } else {
-//            recipeImagesView.setVisibility(View.GONE);
-//        }
-//    }
 }
 

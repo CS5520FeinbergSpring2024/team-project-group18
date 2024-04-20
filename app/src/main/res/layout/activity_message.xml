@@ -80,7 +80,7 @@
                 android:backgroundTint="#A4C5CA" />
         </LinearLayout>
 
-    </LinearLayout>>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
