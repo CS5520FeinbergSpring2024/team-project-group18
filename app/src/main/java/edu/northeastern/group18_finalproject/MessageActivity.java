@@ -38,6 +38,7 @@ public class MessageActivity extends AppCompatActivity {
     private EditText messageEditText;
     private Button sendMessageButton;
     private DatabaseReference messagesRef;
+    private DatabaseReference messagesInfoRef;
     private DatabaseReference friendMessagesRef;
     private DatabaseReference senderInfoRef;
     private String currentUsername;
@@ -60,6 +61,18 @@ public class MessageActivity extends AppCompatActivity {
         currentUsername = UserSession.getUsername();
 
         messagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(currentUsername).child("message").child(friendUsername);
+        messagesInfoRef = messagesRef.child("currentMessage");
+        messagesInfoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messageTextview.setText(messagesInfoRef.toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         friendMessagesRef = FirebaseDatabase.getInstance().getReference().child("users").child(friendUsername).child("message").child(currentUsername);
         getCounter();
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
