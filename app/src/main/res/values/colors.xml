@@ -24,11 +24,11 @@
 
     <color name="buttonColor">#A4C5CA</color>
 
-    <color name="postColor">#E896A5F1</color>
+    <color name="postColor">#E8B4BEF3</color>
 
     <color name="photoColor">#EC89BF</color>
 
-    <color name="chip_background_color">#FFB9DF</color>
+    <color name="chip_background_color">#EC89BF</color>
     <color name="chip_text_color">#FFFFFFFF</color>
     <color name="chip_stroke_color">#EC89BF</color>
 

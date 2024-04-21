@@ -286,6 +286,8 @@ public class UploadRecipeActivity extends AppCompatActivity {
         Chip chip = new Chip(this, null, R.attr.customChipStyle);
         chip.setId(View.generateViewId());
         chip.setText(tagText);
+        chip.setChipBackgroundColorResource(R.color.chip_background_color);
+        chip.setTextColor(getResources().getColor(R.color.chip_text_color));
         chip.setClickable(true);
         chip.setCheckable(true);
         chip.setChecked(isChecked);

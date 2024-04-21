@@ -18,6 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Post"
+        android:textStyle="bold"
         android:textColor="@color/white"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
