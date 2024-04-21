@@ -161,15 +161,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registerNotification(DataSnapshot dataSnapshot) {
-        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+        String friendName = dataSnapshot.child("sender").getValue(String.class);
+        Intent intent = new Intent(MainActivity.this, MessageActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("friendUsername", friendName);
         PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_MUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.shake)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.shake))
                 .setContentTitle("New Message Received!")
-                .setContentText("You received a new message from a friend" + dataSnapshot.child("sender").getValue(String.class))
+                .setContentText("You received a new message from " + friendName)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
