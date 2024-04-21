@@ -41,14 +41,15 @@
 
     <TextView
         android:id="@+id/recipeTagsTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="17sp"
         android:textStyle="bold"
         android:textColor="@color/chip_stroke_color"
+        android:gravity="end"
         android:layout_marginStart="50dp"
         android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/recipeCreatorTextView"
@@ -69,7 +70,7 @@
         android:id="@+id/recipeCreatorTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textColor="@color/textColor"
         android:textStyle="bold"
         android:layout_marginStart="5dp"
@@ -102,17 +103,6 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-<!--    <androidx.viewpager2.widget.ViewPager2-->
-<!--        android:id="@+id/recipeImagesView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="250dp"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:layout_marginTop="25dp"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/recipeCreatorTextView" />-->
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/viewPagerIndicator"
         android:layout_width="wrap_content"
@@ -129,7 +119,7 @@
         android:id="@+id/recipeNameTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:textColor="@color/textColor"
         android:layout_marginStart="16dp"
@@ -143,10 +133,10 @@
         android:id="@+id/recipeDescriptionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textColor="@color/textColor"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -154,11 +144,11 @@
 
     <TextView
         android:id="@+id/cookingTimeText"
-        android:layout_width="0dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:textColor="@color/textColor"
         android:text="Estimated Time (mins): "
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:textStyle="bold"
@@ -172,11 +162,12 @@
         android:layout_height="wrap_content"
         android:textColor="@color/textColor"
         android:textSize="16sp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintStart_toEndOf="@id/cookingTimeText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recipeDescriptionTextView"/>
+        app:layout_constraintTop_toTopOf="@id/cookingTimeText"
+        app:layout_constraintBottom_toBottomOf="@id/cookingTimeText"
+        />
 
     <TextView
         android:id="@+id/ingredientsText"
@@ -184,7 +175,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/textColor"
         android:text="Ingredients: "
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -201,6 +192,7 @@
         android:textSize="16sp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ingredientsText"/>
@@ -211,7 +203,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/textColor"
         android:text="Directions: "
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -228,6 +220,7 @@
         android:textSize="16sp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/directionsText"/>

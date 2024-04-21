@@ -3,14 +3,14 @@
     <item android:state_selected="true">
         <shape android:shape="oval">
             <size android:width="5dp" android:height="5dp"/>
-            <solid android:color="@color/button_ripple_color"/>  <!-- Replace with your color for selected -->
+            <solid android:color="@color/textColor"/>  <!-- Replace with your color for selected -->
         </shape>
     </item>
     <!-- Inactive tab dot -->
     <item>
         <shape android:shape="oval">
             <size android:width="5dp" android:height="5dp"/>
-            <solid android:color="@color/textColor"/>  <!-- Replace with your color for non-selected -->
+            <solid android:color="@color/button_ripple_color"/>  <!-- Replace with your color for non-selected -->
         </shape>
     </item>
 </selector>

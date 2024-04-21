@@ -177,7 +177,7 @@ public class DisplayRecipe extends AppCompatActivity {
         recipeDescriptionTextView.setText(recipe.getDescription());
         recipeCookingTimeTextView.setText(recipe.getCookingTime());
         recipeIngredientsTextView.setText(recipe.getIngredients());
-        recipeDescriptionTextView.setText(recipe.getDescription());
+        recipeDirectionsTextView.setText(recipe.getDirections());
 
         if (recipe.getCreator() == null || recipe.getCreator().isEmpty()) {
             recipeCreatorTextView.setText("Anonymous");
@@ -204,7 +204,7 @@ public class DisplayRecipe extends AppCompatActivity {
         if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
             String tagsWithHash = recipe.getTags().stream()
                     .map(tag -> "#" + tag) // Add "#" to each tag
-                    .collect(Collectors.joining(", ")); // Join them with a comma
+                    .collect(Collectors.joining(" ")); // Join them with a comma
             recipeTagsTextView.setText(tagsWithHash);
         } else{
             recipeTagsTextView.setVisibility(View.GONE);
