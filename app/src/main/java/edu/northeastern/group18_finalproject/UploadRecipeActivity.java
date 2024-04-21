@@ -294,7 +294,7 @@ public class UploadRecipeActivity extends AppCompatActivity {
 
     private void presetTags(){
 
-        String[] presetTags = {"Asian", "European", "American"};
+        String[] presetTags = {"American", "Asian", "European"};
 
         for (String tag : presetTags){
             addTagToGroup(tag, false);

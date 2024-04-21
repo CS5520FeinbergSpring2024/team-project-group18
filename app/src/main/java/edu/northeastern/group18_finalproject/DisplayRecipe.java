@@ -203,8 +203,8 @@ public class DisplayRecipe extends AppCompatActivity {
 
         if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
             String tagsWithHash = recipe.getTags().stream()
-                    .map(tag -> "#" + tag) // Add "#" to each tag
-                    .collect(Collectors.joining(" ")); // Join them with a comma
+                    .map(tag -> "#" + tag)
+                    .collect(Collectors.joining(" "));
             recipeTagsTextView.setText(tagsWithHash);
         } else{
             recipeTagsTextView.setVisibility(View.GONE);
@@ -351,18 +351,6 @@ public class DisplayRecipe extends AppCompatActivity {
                 Log.e("DisplayRecipe", "Failed to read like status", databaseError.toException());
             }
         });
-
-//        Boolean liked = recipe.getLikedBy().get(UserSession.getUsername());
-//        if (liked != null && liked){
-//            recipeRef.child("likes").setValue(recipe.getLikes() - 1);
-//            userLikesRef.removeValue();
-//            likeRecipeButton.setImageResource(R.drawable.ic_likebutton);
-//
-//        } else {
-//            recipeRef.child("likes").setValue(recipe.getLikes() + 1);
-//            userLikesRef.setValue(true);
-//            likeRecipeButton.setImageResource(R.drawable.ic_filled_like_button);
-//        }
     }
 
     private void updateLikeButtonState(Recipe recipe) {
