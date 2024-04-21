@@ -75,12 +75,6 @@ public class FriendListActivity extends AppCompatActivity {
                     // Update the RecyclerView adapter with the fetched friend list
 //                    adapter = new FriendListAdapter(friendList);
                     adapter.notifyDataSetChanged();
-//                    Log.d("friend", adapter.toString());
-
-
-
-//                    friendListRecyclerView.setAdapter(adapter);
-
 
                 } else {
                     Log.d("Firebase", "No friends found for the user");

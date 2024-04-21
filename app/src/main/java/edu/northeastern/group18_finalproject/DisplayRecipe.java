@@ -51,8 +51,6 @@ public class DisplayRecipe extends AppCompatActivity {
     private TextView likeCountTextView;
     private MaterialButton addFriendButton;
 
-//    private User currentUser;
-//    private User recipeCreator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
