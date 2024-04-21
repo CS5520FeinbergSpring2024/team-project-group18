@@ -35,6 +35,7 @@ public class MessageActivity extends AppCompatActivity {
 
     private TextView messageTextview;
     private TextView senderTextView;
+    private TextView receiverTextView;
     private EditText messageEditText;
     private Button sendMessageButton;
     private DatabaseReference messagesRef;
@@ -53,10 +54,12 @@ public class MessageActivity extends AppCompatActivity {
         // Initialize views
         messageTextview = findViewById(R.id.messageTextView);
         senderTextView = findViewById(R.id.senderTextView);
+        receiverTextView = findViewById(R.id.receiverTextView);
         messageEditText = findViewById(R.id.messageEditText);
         sendMessageButton = findViewById(R.id.sendMessageButton);
 
         friendUsername = getIntent().getStringExtra("friendUsername");
+        receiverTextView.setText(friendUsername);
 
         currentUsername = UserSession.getUsername();
 
